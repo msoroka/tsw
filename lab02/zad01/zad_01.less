@@ -1,0 +1,18 @@
+.wrapper(@bg-color, @border-color) {
+    position: absolute;
+    width: 30%;
+    height: 20%;
+    text-align: center;
+    background: @bg-color;
+    border: 1px solid @border-color;
+}
+.A {
+    .wrapper(yellow, red);
+    z-index: 1;
+}
+.B {
+    .wrapper(white, blue);
+    z-index: 2;
+    top: 10%;
+    left: 15%;
+}
