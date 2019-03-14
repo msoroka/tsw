@@ -14,9 +14,14 @@ let appFun = function(f) {
     }
 
     let args = [];
-    Array.from(arguments).forEach((value, key) => {
-        if(typeof value === f.typeConstr[key - 1]) {
+    let array = Array.from(arguments);
+    array.shift();
+
+    array.forEach((value, key) => {
+        if(typeof value === f.typeConstr[key]) {
             args.push(value);
+        } else {
+            throw({ typerr: "Argument " + (key + 2) + " wasn't typeof " + f.typeConstr[key] + "."});
         }
     });
 
@@ -25,6 +30,12 @@ let appFun = function(f) {
 
 try {
     console.log(appFun(myFun, 12, 15));
+} catch (e) {
+    console.log(e.typerr);
+}
+
+try {
+    console.log(appFun(myFun, 12, '15'));
 } catch (e) {
     console.log(e.typerr);
 }
