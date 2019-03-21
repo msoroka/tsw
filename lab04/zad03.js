@@ -13,12 +13,9 @@ let dane = {
 };
 
 String.prototype.podstaw = function (dane) {
-    return this.replace(/\{([a-zA-Z0-9]+)\}/g, (match, p1) => {
-        if (dane.hasOwnProperty(p1)) {
-            return dane[p1];
-        }
-
-        return match;
+    return this.replace(/{[\w]+}/g, (match) => {
+        let arg = match.substr(1, match.length - 2);
+        return dane.hasOwnProperty(arg) ? dane[arg] : match;
     });
 };
 
