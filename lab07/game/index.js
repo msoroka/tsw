@@ -5,11 +5,27 @@ const uuidv1 = require('uuid/v1');
 
 let games = new Map();
 
+let generateGame = (size, colors) => {
+    let board = [];
+
+    for(let i = 0; i < size; i++) {
+        board[i] = Math.floor(Math.random() * colors) + 1;
+    }
+
+    return board;
+};
+
 exports.new = (req, res) => {
     let game = uuidv1();
     let size = req.body.size;
     let colors = req.body.colors;
-    let steps = req.body.steps;
+    let steps = 0;
+
+    if(req.body.steps) {
+        steps = req.body.steps;
+    } else {
+        steps = "inf";
+    }
 
     let gameSettings = {
         "game": game,
@@ -22,6 +38,7 @@ exports.new = (req, res) => {
         "settings": gameSettings,
         "status": false,
         "moves": {},
+        "board": generateGame(size, colors),
     });
 
     res.status(201).send(gameSettings);
@@ -38,13 +55,13 @@ exports.move = (req, res) => {
     }
 
     let moves =  Array.from(games.get(game).moves);
-
     moves.push(move);
 
     games.set(game, {
         "settings": games.get(game).settings,
         "status": games.get(game).status,
         "moves": moves,
+        "board": games.get(game).board,
     });
 
     res.status(200).send({
