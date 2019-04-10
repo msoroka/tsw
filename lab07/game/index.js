@@ -8,12 +8,51 @@ let games = new Map();
 let generateGame = (size, colors) => {
     let board = [];
 
-    for(let i = 0; i < size; i++) {
+    for (let i = 0; i < size; i++) {
         board[i] = Math.floor(Math.random() * colors) + 1;
     }
 
     return board;
 };
+
+
+let toMap = (array) => {
+    let m = new Map();
+    array.forEach((value, key) => {
+        if (!m.has(value)) {
+            m.set(value, new Set());
+        }
+
+        m.get(value).add(key);
+    });
+
+    return m;
+};
+
+let white = (board, move) => {
+    let points = 0;
+
+    move.forEach((value, key) => {
+        if (board.has(key)) {
+            points += Math.min(board.get(key).size, move.get(key).size);
+        }
+    });
+
+    return points - black(board, move);
+};
+
+let black = (board, move) => {
+    let points = 0;
+
+    move.forEach((value, key) => {
+        if (board.has(key)) {
+            points += (Array.from(value).filter(v => Array.from(board.get(key)).includes(v))).length;
+        }
+    });
+
+    return points;
+};
+
 
 exports.new = (req, res) => {
     let game = uuidv1();
@@ -21,7 +60,7 @@ exports.new = (req, res) => {
     let colors = req.body.colors;
     let steps = 0;
 
-    if(req.body.steps) {
+    if (req.body.steps) {
         steps = req.body.steps;
     } else {
         steps = "inf";
@@ -37,7 +76,6 @@ exports.new = (req, res) => {
     games.set(game, {
         "settings": gameSettings,
         "status": false,
-        "moves": {},
         "board": generateGame(size, colors),
     });
 
@@ -48,27 +86,53 @@ exports.move = (req, res) => {
     let game = req.body.game;
     let move = req.body.move;
 
-    if(!games.has(game)) {
+    if (!games.has(game)) {
         res.status(404).send({
-           "massage": "Game doesn't exsist", 
+            "massage": "Game doesn't exsist.",
         });
     }
 
-    let moves =  Array.from(games.get(game).moves);
-    moves.push(move);
+    if (games.get(game).settings.steps == 0) {
+        res.status(202).send({
+            "massage": "No steps left.",
+        });
+    }
 
-    games.set(game, {
-        "settings": games.get(game).settings,
-        "status": games.get(game).status,
-        "moves": moves,
-        "board": games.get(game).board,
-    });
+    if (games.get(game).status == true) {
+        res.status(200).send({
+            "massage": "Game finished successfully..",
+        });
+    }
+
+    console.log(games.get(game).board);
+
+    let whitePoints = white(toMap(games.get(game).board), toMap(move));
+    let blackPoints = black(toMap(games.get(game).board), toMap(move));
+
+    let steps = games.get(game).settings.steps;
+
+    if (steps !== 'inf') {
+        steps--;
+    }
+
+    if (blackPoints == games.get(game).board.length) {
+        games.set(game, {
+            "settings": {
+                "game": games.get(game).settings.game,
+                "size": games.get(game).settings.size,
+                "colors": games.get(game).settings.colors,
+                "steps": steps,
+            },
+            "status": blackPoints == games.get(game).board.length ? true : false,
+            "board": games.get(game).board,
+        });
+    }
 
     res.status(200).send({
         "game": game,
         "result": {
-            "black": "",
-            "white": "",
+            "black": blackPoints,
+            "white": whitePoints,
         }
     });
 };
@@ -76,9 +140,9 @@ exports.move = (req, res) => {
 exports.status = (req, res) => {
     let game = req.body.game;
 
-    if(!games.has(game)) {
+    if (!games.has(game)) {
         res.status(404).send({
-           "massage": "Game doesn't exsist", 
+            "massage": "Game doesn't exsist",
         });
     }
 
