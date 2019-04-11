@@ -77,6 +77,7 @@ exports.new = (req, res) => {
         "settings": gameSettings,
         "status": false,
         "board": generateGame(size, colors),
+        "moves": [],
     });
 
     res.status(201).send(gameSettings);
@@ -104,29 +105,28 @@ exports.move = (req, res) => {
         });
     }
 
-    console.log(games.get(game).board);
+    let moves = games.get(game).moves;
+    moves.push(move);
 
     let whitePoints = white(toMap(games.get(game).board), toMap(move));
     let blackPoints = black(toMap(games.get(game).board), toMap(move));
-
     let steps = games.get(game).settings.steps;
 
-    if (steps !== 'inf') {
-        steps--;
+    if (steps != 'inf') {
+        steps = parseInt(steps) - 1;
     }
 
-    if (blackPoints == games.get(game).board.length) {
-        games.set(game, {
-            "settings": {
-                "game": games.get(game).settings.game,
-                "size": games.get(game).settings.size,
-                "colors": games.get(game).settings.colors,
-                "steps": steps,
-            },
-            "status": blackPoints == games.get(game).board.length ? true : false,
-            "board": games.get(game).board,
-        });
-    }
+    games.set(game, {
+        "settings": {
+            "game": games.get(game).settings.game,
+            "size": games.get(game).settings.size,
+            "colors": games.get(game).settings.colors,
+            "steps": steps,
+        },
+        "status": blackPoints == games.get(game).board.length ? true : false,
+        "board": games.get(game).board,
+        "moves": moves,
+    });
 
     res.status(200).send({
         "game": game,
@@ -149,6 +149,7 @@ exports.status = (req, res) => {
     res.status(200).send({
         "game": game,
         "status": games.get(game).status,
+        "steps": games.get(game).settings.steps,
         "moves": games.get(game).moves
     });
 };

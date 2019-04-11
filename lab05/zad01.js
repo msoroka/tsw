@@ -38,8 +38,8 @@ let black = (board, move) => {
     return points;
 };
 
-let kod = toMap([1, 3, 3, 2, 2]);
-let ruch = toMap([1, 3, 2, 3, 2]);
+let kod = toMap([1,2,3]);
+let ruch = toMap([3,2,1]);
 
 console.log("White: " + white(kod, ruch));
 console.log("Black: " + black(kod, ruch));
