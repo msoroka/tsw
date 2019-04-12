@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Mastermind - Mateusz Soroka</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="status-game">
+        <button id="status-game-btn" type="submit">Status gry</button>
+    </div>
+    <div id="new-game">
+        <form method="POST" action="/">
+            <label for="size">Rozmiar planszy</label>
+            <input type="text" name="size" id="size" required>
+
+            <label for="colors">Ilość kolorów</label>
+            <input type="text" name="colors" id="colors" required>
+
+            <label for="steps">Ilość prób</label>
+            <input type="text" name="steps" id="steps">
+
+            <button id="new-game-btn" type="submit">Nowa gra</button>
+        </form>
+    </div>
+    <div id="move-games">
+        <button id="mov-game-btn" type="submit" style="display: none;">Wykonaj ruch</button>
+    </div>
+
+    <script src="mastermind.js"></script>
+</body>
+</html>
