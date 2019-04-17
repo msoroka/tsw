@@ -89,19 +89,19 @@ exports.move = (req, res) => {
 
     if (!games.has(game)) {
         res.status(404).send({
-            "massage": "Game doesn't exsist.",
+            "message": "Game doesn't exsist.",
         });
     }
 
     if (games.get(game).settings.steps == 0) {
         res.status(202).send({
-            "massage": "No steps left.",
+            "message": "No steps left.",
         });
     }
 
     if (games.get(game).status == true) {
         res.status(200).send({
-            "massage": "Game finished successfully..",
+            "message": "Game finished successfully..",
         });
     }
 
@@ -142,7 +142,7 @@ exports.status = (req, res) => {
 
     if (!games.has(game)) {
         res.status(404).send({
-            "massage": "Game doesn't exsist",
+            "message": "Game doesn't exsist",
         });
     }
 

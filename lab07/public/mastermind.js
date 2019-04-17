@@ -1,13 +1,23 @@
 /* jshint strict: global, esversion: 6, devel: true, node: true, browser:true */
 'use strict';
 
+let globalSteps;
+let colorMap;
+let colorGlob = 0;
+
 document.addEventListener("DOMContentLoaded", function () {
     let newGameBtn = document.getElementById('new-game-btn');
     let statusGameBtn = document.getElementById('status-game-btn');
 
+    generateColorMap();
+
+    let gameId = window.localStorage.getItem('gameId');
+    if (!gameId) {
+        statusGameBtn.style.display = 'none';
+    }
+
     newGameBtn.addEventListener('click', (event) => {
         event.preventDefault();
-
         newGame();
     });
 
@@ -17,12 +27,15 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 let generateBoard = (size) => {
-    let div = document.getElementById('move-games');
+    let div = document.getElementById('move-game');
 
     for (let i = 0; i < size; i++) {
         let input = document.createElement("input");
         input.type = "text";
         input.name = "move";
+        input.value = "0";
+        input.setAttribute('class', 'input-hide');
+        input.setAttribute("required", "required");
         div.appendChild(input);
     }
 
@@ -46,7 +59,7 @@ let newGame = () => {
     let colors = document.getElementById('colors').value;
     let steps = document.getElementById('steps').value;
 
-    if(size == '' || colors == '') {
+    if (size == '' || colors == '') {
         console.log("Proszę uzupełnić dane nowej gry");
         return;
     }
@@ -55,6 +68,14 @@ let newGame = () => {
 
     let requestURL = 'http://localhost:3000/game/new';
     let request = new XMLHttpRequest();
+
+    globalSteps = steps;
+
+    let div = document.getElementById('steps-game');
+    let move = document.createElement("P");
+    move.id = "steps-left";
+    move.innerText = "Pozostałe ruchy: " + globalSteps;
+    div.appendChild(move);
 
     request.open('POST', requestURL, true);
     request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -67,6 +88,12 @@ let newGame = () => {
     request.onload = function () {
         let response = JSON.parse(this.response);
         window.localStorage.setItem('gameId', response.game);
+        window.localStorage.setItem('size', size);
+        window.localStorage.setItem('colors', colors);
+        window.localStorage.setItem('steps', steps);
+
+        createColorPicker(colors);
+        createColorInputs(size);
 
         if (response) {
             generateBoard(response.size);
@@ -115,7 +142,6 @@ let moveGame = () => {
 
         move.forEach((input) => {
             moveValues.push(parseInt(input.value));
-            input.value = '';
         });
 
         request.open('POST', requestURL, true);
@@ -126,11 +152,44 @@ let moveGame = () => {
         }));
         request.onload = function () {
             let response = JSON.parse(this.response);
-
             if (response) {
+
+                let outDiv = document.getElementById('history-game');
+                
+                let div = document.createElement("div");
+
+                moveValues.forEach((val, key) => {
+                    let move = document.createElement("div");
+                    move.style.backgroundColor = colorMap.get(val);
+                    move.setAttribute('class', 'result-color');
+                    div.appendChild(move);
+                });
+
+                for (let index = 0; index < response.result.black; index++) {
+                    let move = document.createElement("div");
+                    move.style.backgroundColor = 'black';
+                    move.setAttribute('class', 'result-bw');
+                    div.appendChild(move);
+                }
+
+                for (let index = 0; index < response.result.white; index++) {
+                    let move = document.createElement("div");
+                    move.style.backgroundColor = 'white';
+                    move.setAttribute('class', 'result-bw');
+                    div.appendChild(move);
+                }
+
+                let stepsLeft = document.getElementById('steps-left');
+                if (globalSteps !== 'inf') {
+                    globalSteps = parseInt(globalSteps) - 1;
+                    stepsLeft.innerText = "Pozostałe ruchy: " + globalSteps;
+                }
+
+                outDiv.appendChild(div);
+
                 console.log(response);
-                if(response.result.black == moveValues.length) {
-                    let div = document.getElementById('move-games');
+                if (response.result.black == moveValues.length) {
+                    let div = document.getElementById('move-game');
                     div.remove();
                     console.log('Wygrana !');
                 }
@@ -141,4 +200,72 @@ let moveGame = () => {
     } else {
         console.log('Brak gry');
     }
+};
+
+let generateColorMap = () => {
+    colorMap = new Map();
+
+    colorMap.set(0, 'SILVER');
+    colorMap.set(1, 'RED');
+    colorMap.set(2, 'MAROON');
+    colorMap.set(3, 'YELLOW');
+    colorMap.set(4, 'OLIVE');
+    colorMap.set(5, 'LIME');
+    colorMap.set(6, 'BLUE');
+    colorMap.set(7, 'FUCHSIA');
+    colorMap.set(8, 'TEAL');
+    colorMap.set(9, 'AQUA');
+    colorMap.set(10, 'PURPLE');
+};
+
+let createColorPicker = (colors) => {
+    let div = document.getElementById('color-picker');
+    for (let index = 1; index <= colors; index++) {
+        let picker = document.createElement("div");
+        picker.setAttribute('class', 'picker');
+        picker.style.background = colorMap.get(index);
+        div.appendChild(picker);
+    }
+
+    let pickers = document.getElementsByClassName('picker');
+
+    Array.from(pickers).forEach(picker => {
+        picker.addEventListener('click', (event) => {
+            let stringColor = event.target.style.backgroundColor;
+            colorGlob = getKeyByValue(colorMap, stringColor);
+
+            console.log(stringColor, colorGlob);
+        });
+    });
+};
+
+let createColorInputs = (size) => {
+    let div = document.getElementById('move-game');
+    for (let index = 1; index <= size; index++) {
+        let picker = document.createElement("div");
+        picker.setAttribute('class', 'picker-input');
+        picker.style.background = colorMap.get(0);
+        div.appendChild(picker);
+    }
+    let inputsColor = document.getElementsByClassName('picker-input');
+
+    Array.from(inputsColor).forEach((picker, key) => {
+        picker.addEventListener('click', (event) => {
+            event.target.style.backgroundColor = colorMap.get(colorGlob);
+            let move = document.querySelectorAll("input[name='move']");
+            move[key].value = colorGlob;
+        });
+    });
+};
+
+let getKeyByValue = (object, value) => {
+    let result = 0;
+
+    object.forEach((val, key) => {
+        if(val.toUpperCase() === value.toUpperCase()) {
+            result = key;
+        }
+    });
+
+    return result;
 };
