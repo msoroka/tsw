@@ -11,15 +11,9 @@
 <body>
     <div id="container">
         <div id="status">
-            <div id="status-game">
-                <button id="status-game-btn" type="submit">Status gry</button>
-            </div>
-            <div id="steps-game"></div>
-            <div id="history-game"></div>
-        </div>
-        <div id="game">
+            <h3>Mastermind</h3>
             <div id="new-game">
-                <form method="POST" action="/">
+                <form method="POST" action="/" id="new-game-input">
                     <label for="size">Rozmiar planszy</label>
                     <input type="text" name="size" id="size" required>
     
@@ -32,10 +26,15 @@
                     <button id="new-game-btn" type="submit">Nowa gra</button>
                 </form>
             </div>
+            <!-- <div id="status-game">
+                <button id="status-game-btn" type="submit">Status gry</button>
+            </div> -->
+            <div id="steps-game"></div>
+            <div id="history-game"></div>
+        </div>
+        <div id="game">
             <div id="color-picker"></div>
-            <div id="move-game">
-                <button id="mov-game-btn" type="submit" style="display: none;">Wykonaj ruch</button>
-            </div>
+            <div id="move-game"></div>
         </div>
     </div>
 

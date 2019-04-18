@@ -1,8 +1,19 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: lightgray;
+    font-family: sans-serif;
+    transition: background-color 0.5s ease;
+}
+
 #container {
     display: flex;
     width: 100%;
     height: 100vh;
     align-items: stretch;
+
     #status {
         flex-direction: column;
         display: flex;
@@ -10,11 +21,21 @@
         text-align: center;
         flex-direction: column;
         align-content: space-between;
-        padding: 10px 0;
+        width: 100%;
+        height: 100%;
+        border: 1px solid black;
+
+        h3 {
+            text-align: center;
+            font-size: 2rem;
+        }
     }
+
     #game {
+        width: 100%;
         flex-direction: column;
-        padding: 0 50px;
+        display: flex;
+        align-items: center;
     }
 }
 
@@ -49,4 +70,59 @@
 
 .input-hide {
     display: none;
+}
+
+#move-game {
+    text-align: center;
+
+    #move-game-btn {
+        display: block;
+        margin: 20px;
+        text-align: center;
+        margin: 20px auto;
+    }
+}
+
+button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    background: gray;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.input-wrapper {
+    display: block;
+    text-align: center;
+    margin: 10px auto;
+    font-size: 1.5rem;
+}
+
+#new-game-input {
+    label {
+        .input-wrapper;
+    }
+
+    input {
+        .input-wrapper;
+    }
+}
+
+#history-game {
+    .history-move {
+        text-align: left;
+        width: 70%;
+        display: inline-block;
+    }
+
+    .history-result {
+        text-align: right;
+        width: 30%;
+        display: inline-block;
+    }
+}
+
+#steps-left {
+    font-size: 1.5rem;
+    padding: 1rem;
 }

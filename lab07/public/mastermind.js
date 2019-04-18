@@ -7,23 +7,23 @@ let colorGlob = 0;
 
 document.addEventListener("DOMContentLoaded", function () {
     let newGameBtn = document.getElementById('new-game-btn');
-    let statusGameBtn = document.getElementById('status-game-btn');
+    // let statusGameBtn = document.getElementById('status-game-btn');
 
     generateColorMap();
 
-    let gameId = window.localStorage.getItem('gameId');
-    if (!gameId) {
-        statusGameBtn.style.display = 'none';
-    }
+    // let gameId = window.localStorage.getItem('gameId');
+    // if (!gameId) {
+    //     statusGameBtn.style.display = 'none';
+    // }
 
     newGameBtn.addEventListener('click', (event) => {
         event.preventDefault();
         newGame();
     });
 
-    statusGameBtn.addEventListener('click', (_event) => {
-        statusGame();
-    });
+    // statusGameBtn.addEventListener('click', (_event) => {
+    //     statusGame();
+    // });
 });
 
 let generateBoard = (size) => {
@@ -54,6 +54,14 @@ let generateBoard = (size) => {
 
 let newGame = () => {
     window.localStorage.removeItem('gameId');
+
+    document.body.style.backgroundColor = "lightgrey";
+    document.body.style.color = "black";
+
+    document.getElementById('steps-game').innerHTML = '';
+    document.getElementById('history-game').innerHTML = '';
+    document.getElementById('color-picker').innerHTML = '';
+    document.getElementById('move-game').innerHTML = '';
 
     let size = document.getElementById('size').value;
     let colors = document.getElementById('colors').value;
@@ -152,19 +160,24 @@ let moveGame = () => {
         }));
         request.onload = function () {
             let response = JSON.parse(this.response);
-            if (response) {
+            if (response && this.status !== 202) {
 
                 let outDiv = document.getElementById('history-game');
+                let stepDiv = document.createElement("div");
+                stepDiv.setAttribute('class', 'step');
                 
                 let div = document.createElement("div");
-
+                div.setAttribute('class', 'history-move');
                 moveValues.forEach((val, key) => {
                     let move = document.createElement("div");
                     move.style.backgroundColor = colorMap.get(val);
                     move.setAttribute('class', 'result-color');
                     div.appendChild(move);
                 });
+                stepDiv.appendChild(div);
 
+                div = document.createElement("div");
+                div.setAttribute('class', 'history-result');
                 for (let index = 0; index < response.result.black; index++) {
                     let move = document.createElement("div");
                     move.style.backgroundColor = 'black';
@@ -178,6 +191,9 @@ let moveGame = () => {
                     move.setAttribute('class', 'result-bw');
                     div.appendChild(move);
                 }
+                stepDiv.appendChild(div);
+
+                outDiv.appendChild(stepDiv);
 
                 let stepsLeft = document.getElementById('steps-left');
                 if (globalSteps !== 'inf') {
@@ -185,16 +201,22 @@ let moveGame = () => {
                     stepsLeft.innerText = "Pozostałe ruchy: " + globalSteps;
                 }
 
-                outDiv.appendChild(div);
-
-                console.log(response);
                 if (response.result.black == moveValues.length) {
-                    let div = document.getElementById('move-game');
-                    div.remove();
-                    console.log('Wygrana !');
+                    document.getElementById('move-game').innerHTML = '';
+                    let message = document.getElementById('steps-left');
+                    message.innerText = "Wygrana!";
+                    document.body.style.backgroundColor = "#00cd00";
+                    document.body.style.color = "white";
                 }
             } else {
-                console.log('Błąd podczas pobierania statusu gry');
+                
+            }
+            if (globalSteps == 0 && response.result.black != moveValues.length) {
+                document.getElementById('move-game').innerHTML = '';
+                let message = document.getElementById('steps-left');
+                message.innerText = "Przegrana!";
+                document.body.style.backgroundColor = "#C83200";
+                document.body.style.color = "white";
             }
         };
     } else {
@@ -241,6 +263,7 @@ let createColorPicker = (colors) => {
 
 let createColorInputs = (size) => {
     let div = document.getElementById('move-game');
+    console.log(div);
     for (let index = 1; index <= size; index++) {
         let picker = document.createElement("div");
         picker.setAttribute('class', 'picker-input');
