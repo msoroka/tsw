@@ -165,7 +165,7 @@ let moveGame = () => {
                 let outDiv = document.getElementById('history-game');
                 let stepDiv = document.createElement("div");
                 stepDiv.setAttribute('class', 'step');
-                
+
                 let div = document.createElement("div");
                 div.setAttribute('class', 'history-move');
                 moveValues.forEach((val, key) => {
@@ -209,7 +209,7 @@ let moveGame = () => {
                     document.body.style.color = "white";
                 }
             } else {
-                
+
             }
             if (globalSteps == 0 && response.result.black != moveValues.length) {
                 document.getElementById('move-game').innerHTML = '';
@@ -285,7 +285,7 @@ let getKeyByValue = (object, value) => {
     let result = 0;
 
     object.forEach((val, key) => {
-        if(val.toUpperCase() === value.toUpperCase()) {
+        if (val.toUpperCase() === value.toUpperCase()) {
             result = key;
         }
     });
