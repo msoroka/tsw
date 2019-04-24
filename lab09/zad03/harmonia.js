@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         header.addEventListener('mouseover', (event) => {
             event.preventDefault();
-            
+
             header.nextSibling.nextSibling.style.display = 'block';
         });
     });
