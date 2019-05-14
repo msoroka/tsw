@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Socket.io - chat</title>
+
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <p class="navbar-item has-text-weight-bold">Witaj -&nbsp;<span id="logged-user">anonymous</span></p>
+
+        <div class="navbar-item">
+            <input class="input" style="display: none;" type="text" name="username" placeholder="Nazwa użytkownika">
+            <button class="button is-info" id="set-username">Zmień</button>
+        </div>
+
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMobile">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="navbarMobile" class="navbar-menu">
+        <div class="navbar-start">
+        </div>
+
+        <div class="navbar-end">
+            <a class="navbar-item">Główny pokój</a>
+
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">Pokoje</a>
+
+                <div class="navbar-dropdown">
+                    <a class="navbar-item">Wydmuszka1</a>
+                    <a class="navbar-item">Wydmuszka2</a>
+                    <a class="navbar-item">Wydmuszka3</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="columns">
+        <div class="column is-one-third">
+        </div>
+        <div class="column">
+            <div class="message-form message-history">
+            </div>
+            <div class="message-form">
+                <label for="message" class="label field">Wiadomość</label>
+                <input type="text" name="message" id="message" class="input field">
+                <button class="button is-primary field" id="send-message">Wyślij</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../node_modules/socket.io-client/dist/socket.io.js"></script>
+<script src="chat.js" defer></script>
+</body>
+</html>
