@@ -5,25 +5,35 @@ Vue.use(Router);
 
 export default new Router({
   routes: [
+    //  Ranking
     {
       path: "/",
       name: "ranking",
-      component: () => import("./views/rankings/Rankings.vue")
+      component: () => import("./views/rankings/Index.vue")
     },
+    //  Horses
     {
       path: "/horses",
       name: "horses",
-      component: () => import("./views/horses/Horses.vue")
+      component: () => import("./views/horses/Index.vue")
     },
+    {
+      path: "/horses/:horseId",
+      name: "horse",
+      component: () => import("./components/horses/View.vue"),
+      props: true
+    },
+    //  Judges
     {
       path: "/judges",
       name: "judges",
-      component: () => import("./views/judges/Judges.vue")
+      component: () => import("./views/judges/Index.vue")
     },
+    //  Classes
     {
       path: "/classes",
       name: "classes",
-      component: () => import("./views/classes/Classes.vue")
+      component: () => import("./views/classes/Index.vue")
     }
   ]
 });
