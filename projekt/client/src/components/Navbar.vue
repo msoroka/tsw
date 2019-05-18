@@ -49,6 +49,7 @@ div {
 
         &:hover {
           background: darken(lightgrey, 10%);
+          cursor: pointer;
         }
       }
 
