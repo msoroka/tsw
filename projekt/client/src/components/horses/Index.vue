@@ -1,33 +1,45 @@
 <template>
   <div class="container">
-    <span v-for="cl in classes" :key="cl.id">
-      <button @click="getHorsesByClass(cl.numer)">
-        Klasa: {{ cl.numer }} // Kategoria: {{ cl.kat }}
-      </button>
-    </span>
+    <div v-for="(cl, index) in classes" :key="cl.id">
+      <span v-if="cl.numer === currentClass">
+        <div class="carousel">
+          <button
+            :disabled="index === 0"
+            @click="getHorsesByClass(cl.numer - 1)"
+          >
+            <i class="arrow left"></i>
+          </button>
+          <span>Klasa: {{ cl.numer }}<br />Kategoria: {{ cl.kat }}</span>
+          <button
+            :disabled="index === classes.length - 1"
+            @click="getHorsesByClass(cl.numer + 1)"
+          >
+            <i class="arrow right"></i>
+          </button>
+        </div>
+      </span>
+    </div>
     <table v-if="horses.length > 0" class="table table-striped">
       <thead>
         <tr>
-          <th>Klasa</th>
+          <th>ID</th>
           <th>Nazwa</th>
           <th>Kraj</th>
-          <th></th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="horse in horses" :key="horse.id">
-          <td>{{ horse.klasa }}</td>
+        <tr
+          v-for="horse in horses"
+          :key="horse.id"
+          @click="viewHorse(horse.id)"
+        >
+          <td>{{ horse.id }}</td>
           <td>{{ horse.nazwa }}</td>
           <td>{{ horse.kraj }}</td>
-          <td>
-            <router-link :to="{ name: 'horse', params: { horseId: horse.id } }">
-              <button>View</button></router-link
-            >
-          </td>
         </tr>
       </tbody>
     </table>
-    <p v-else>Proszę wybrać klasę</p>
+    <p v-else>Brak danych</p>
   </div>
 </template>
 
@@ -36,35 +48,117 @@ import { mapState } from "vuex";
 export default {
   data: function() {
     return {
-      horses: {}
+      horses: {},
+      currentClass: 0,
+      previous: 0,
+      next: 0
     };
   },
   mounted() {
     this.$store.dispatch("fetchAllClasses");
-    this.loadHorses();
+    if (localStorage.getItem("class")) {
+      this.getHorsesByClass(parseInt(localStorage.getItem("class")));
+      this.currentClass = parseInt(localStorage.getItem("class"));
+    } else {
+      this.getHorsesByClass(this.classes[0].numer);
+      this.currentClass = this.classes[0].numer;
+    }
   },
   computed: {
-    ...mapState(["classes"]),
-    compute: function() {
-      this.loadHorses();
-    }
+    ...mapState(["classes"])
   },
   methods: {
     getHorsesByClass: function(cl) {
-      localStorage.setItem("classId", cl);
+      localStorage.setItem("class", cl);
+      this.currentClass = parseInt(cl);
       this.horses = this.$store.getters.fetchHorsesByClass(cl);
     },
-    loadHorses: function() {
-      let classId = localStorage.getItem("classId");
-
-      console.log(classId);
-
-      if (classId) {
-        this.getHorsesByClass(classId);
-      }
+    viewHorse: function(horseId) {
+      this.$router.push({
+        name: "horse",
+        params: {
+          horseId: horseId
+        }
+      });
     }
   }
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="less">
+@bordered: 1px solid darken(lightgrey, 20%);
+
+.container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .carousel {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    span {
+      text-align: center;
+      padding: 5px;
+      width: 30vw;
+      background: darken(lightgrey, 30%);
+      color: #fff;
+      border-top: @bordered;
+      border-bottom: @bordered;
+      font-weight: 700;
+    }
+
+    button {
+      width: 50px;
+      background: darken(lightgrey, 10%);
+      border: @bordered;
+
+      i {
+        border: solid #fff;
+        border-width: 0 3px 3px 0;
+        display: inline-block;
+        padding: 3px;
+
+        &.right {
+          transform: rotate(-45deg);
+          -webkit-transform: rotate(-45deg);
+        }
+        &.left {
+          transform: rotate(135deg);
+          -webkit-transform: rotate(135deg);
+        }
+      }
+    }
+  }
+
+  table {
+    border-collapse: collapse;
+    margin-top: 20px;
+    width: 100%;
+
+    th {
+      background: grey;
+      color: #fff;
+    }
+
+    tbody {
+      tr {
+        &:hover {
+          background: lightgrey;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  table,
+  th,
+  td {
+    text-align: left;
+    border: 1px solid black;
+    padding: 5px;
+  }
+}
+</style>

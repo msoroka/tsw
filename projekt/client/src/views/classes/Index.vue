@@ -13,7 +13,7 @@ export default {
     ClassesIndex
   },
   mounted() {
-    this.$store.dispatch("fetchAllClasses");
+    // this.$store.dispatch("fetchAllClasses");
   },
   computed: {
     ...mapState(["classes"])

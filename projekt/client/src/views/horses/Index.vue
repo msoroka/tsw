@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>It will be horses page</h1>
     <HorsesIndex />
   </div>
 </template>
@@ -13,7 +12,7 @@ export default {
     HorsesIndex
   },
   mounted() {
-    this.$store.dispatch("fetchAllHorses");
+    // this.$store.dispatch("fetchAllHorses");
   },
   computed: {
     ...mapState(["horses"])
