@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>It will be judges page</h1>
+    <h1>Sędziowie oceniający pokazy</h1>
     <JudgesIndex :judges="judges" />
   </div>
 </template>
@@ -21,5 +21,8 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="less"></style>
+<style scoped lang="less">
+h1 {
+  text-align: center;
+}
+</style>

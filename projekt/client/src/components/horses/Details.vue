@@ -10,14 +10,6 @@
         <td>{{ horse.klasa }}</td>
       </tr>
       <tr>
-        <td>Nazwa</td>
-        <td>{{ horse.nazwa }}</td>
-      </tr>
-      <tr>
-        <td>Kraj</td>
-        <td>{{ horse.kraj }}</td>
-      </tr>
-      <tr>
         <td>Rocznik</td>
         <td>{{ horse.rocznik }}</td>
       </tr>
@@ -29,6 +21,9 @@
         <td>Płeć</td>
         <td>{{ horse.plec }}</td>
       </tr>
+    </table>
+
+    <table>
       <tr>
         <td>Hodowca</td>
         <td>{{ horse.hodowca.nazwa }} ({{ horse.hodowca.kraj }})</td>
@@ -61,4 +56,36 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="less">
+div {
+  display: flex;
+  justify-content: space-between;
+}
+table {
+  border-collapse: collapse;
+  margin-top: 20px;
+  width: 45%;
+
+  tr {
+    td {
+      &:first-child {
+        background: grey;
+        color: #fff;
+        font-weight: 700;
+        width: 30%;
+      }
+
+      &:last-child {
+        text-align: right;
+      }
+    }
+  }
+}
+table,
+th,
+td {
+  text-align: left;
+  border: 1px solid black;
+  padding: 5px;
+}
+</style>

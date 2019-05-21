@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1>It will be classes page</h1>
-    <ClassesIndex :classes="classes"/>
+    <h1>Klasy koni oraz składy komisji</h1>
+    <ClassesIndex :classes="classes" />
   </div>
 </template>
 
@@ -21,5 +21,8 @@ export default {
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="less"></style>
+<style scoped lang="less">
+h1 {
+  text-align: center;
+}
+</style>

@@ -2,13 +2,13 @@
   <div>
     <div id="nav">
       <div class="logo">
-        <p>Horses App</p>
+        <p>PokazyKoni</p>
       </div>
       <div class="links">
         <router-link to="/">Ranking</router-link>
-        <router-link to="/horses">Horses</router-link>
-        <router-link to="/judges">Judges</router-link>
-        <router-link to="/classes">Classes</router-link>
+        <router-link to="/horses">Konie</router-link>
+        <router-link to="/judges">Sędziowie</router-link>
+        <router-link to="/classes">Klasy</router-link>
       </div>
     </div>
     <router-view />

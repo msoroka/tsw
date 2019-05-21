@@ -1,6 +1,6 @@
 <template>
-  <div v-if="horse">
-    <h1>It will be horse details page</h1>
+  <div class="container" v-if="horse">
+    <h1>Szczegóły konia {{ horse.nazwa }} ({{ horse.kraj }})</h1>
     <HorseDetails :horse="horse" />
     <HorseNotes :notes="horse.wynik.noty" />
   </div>
@@ -29,4 +29,15 @@ export default {
 };
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  h1 {
+    text-align: center;
+  }
+}
+</style>

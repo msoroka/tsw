@@ -19,6 +19,9 @@ export default new Vuex.Store({
     },
     fetchHorsesByClass: state => cl => {
       return state.horses.filter(horse => horse.klasa === cl);
+    },
+    fetchJudgeById: state => id => {
+      return state.judges.find(judge => judge.id === id);
     }
   },
   actions,
