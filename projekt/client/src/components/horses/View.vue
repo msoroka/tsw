@@ -2,7 +2,7 @@
   <div class="container" v-if="horse">
     <h1>Szczegóły konia {{ horse.nazwa }} ({{ horse.kraj }})</h1>
     <HorseDetails :horse="horse" />
-    <HorseNotes :notes="horse.wynik.noty" />
+    <HorseNotes :notes="horse.wynik.noty" :horse="horse" />
   </div>
 </template>
 

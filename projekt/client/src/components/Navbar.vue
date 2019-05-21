@@ -31,6 +31,7 @@ div {
 
     .logo {
       padding: 10px 20px;
+      color: #000;
 
       p {
         margin: 0;

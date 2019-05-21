@@ -3,6 +3,7 @@
     <table>
       <thead>
         <tr>
+          <th>Sędzia</th>
           <th>Typ</th>
           <th>Głowa</th>
           <th>Kłoda</th>
@@ -11,7 +12,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="note in notes">
+        <tr v-for="(note, index) in notes">
+          <td>{{ getJudge(judges[index]).sedzia }} ({{ getJudge(judges[index]).kraj }})</td>
           <td>{{ note.typ }}</td>
           <td>{{ note.glowa }}</td>
           <td>{{ note.kloda }}</td>
@@ -31,13 +33,15 @@
 <script>
 export default {
   props: {
+    horse: {},
     notes: {}
   },
   data: function() {
     return {
       notesSum: 0,
       typeSum: 0,
-      moveSum: 0
+      moveSum: 0,
+      judges: []
     };
   },
   methods: {
@@ -47,10 +51,19 @@ export default {
         this.typeSum += val.typ;
         this.moveSum += val.ruch;
       });
+    },
+    getJudges: function() {
+      this.judges = this.$store.getters.fetchClassByNumber(
+        this.horse.klasa
+      ).komisja;
+    },
+    getJudge: function(id) {
+      return this.$store.getters.fetchJudgeById(id);
     }
   },
   mounted() {
     this.countSums();
+    this.getJudges();
   }
 };
 </script>
