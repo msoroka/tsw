@@ -73,7 +73,7 @@ export default {
 
       axios
         .put("http://localhost:4000/sedziowie/" + this.judge._id, this.judge)
-        .then(function(response) {
+        .then(function() {
           self.$store.dispatch("fetchAllJudges");
           self.$router.push({
             name: "judges"

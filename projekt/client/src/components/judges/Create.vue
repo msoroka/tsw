@@ -75,14 +75,12 @@ export default {
 
       const self = this;
 
-      axios
-        .post("http://localhost:4000/sedziowie", judge)
-        .then(function(response) {
-          self.$store.commit("ADD_JUDGE", judge);
-          self.$router.push({
-            name: "judges"
-          });
+      axios.post("http://localhost:4000/sedziowie", judge).then(function() {
+        self.$store.commit("ADD_JUDGE", judge);
+        self.$router.push({
+          name: "judges"
         });
+      });
     }
   }
 };

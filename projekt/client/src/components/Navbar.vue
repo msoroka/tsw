@@ -53,11 +53,6 @@ div {
           cursor: pointer;
         }
       }
-
-      a.router-link-exact-active.router-link-active {
-        color: #fff;
-        background: darken(lightgrey, 30%);
-      }
     }
   }
 }

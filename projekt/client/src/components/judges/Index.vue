@@ -39,7 +39,7 @@ export default {
   methods: {
     removeJudge: function(id) {
       const self = this;
-      
+
       axios
         .delete("http://localhost:4000/sedziowie/" + id)
         .then(function(response) {
