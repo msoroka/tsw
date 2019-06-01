@@ -3,7 +3,7 @@ let fetchClassByNumber = state => numer => {
 };
 
 let fetchHorseById = state => id => {
-  return state.horses.find(horse => horse.id === id);
+  return state.horses.find(horse => horse._id === id);
 };
 
 let fetchHorsesByClass = state => cl => {

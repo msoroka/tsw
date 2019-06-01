@@ -30,8 +30,8 @@
       <tbody>
         <tr
           v-for="horse in horses"
-          :key="horse.id"
-          @click="viewHorse(horse.id)"
+          :key="horse._id"
+          @click="viewHorse(horse._id)"
         >
           <td>{{ horse._id }}</td>
           <td>{{ horse.nazwa }}</td>
