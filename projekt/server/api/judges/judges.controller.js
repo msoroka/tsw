@@ -44,7 +44,7 @@ exports.updateJudge = function (req, res, next) {
     var judge = {
         sedzia: req.body.sedzia,
         kraj: req.body.kraj
-    }
+    };
 
     Judges.update({_id: req.params.id}, judge, function (err, judge) {
         if (err) {
