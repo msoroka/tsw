@@ -3,19 +3,18 @@
     <table>
       <thead>
         <tr>
-          <th>ID</th>
           <th>Nazwa</th>
           <th>Kraj</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="judge in judges" :key="judge.id">
-          <td>{{ judge._id }}</td>
           <td>{{ judge.sedzia }}</td>
           <td>{{ judge.kraj }}</td>
         </tr>
       </tbody>
     </table>
+    <router-link class="btn-add" to="judges/create">Dodaj nowego sędziego</router-link>
   </div>
 </template>
 

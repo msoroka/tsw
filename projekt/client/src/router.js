@@ -28,6 +28,11 @@ export default new Router({
       name: "judges",
       component: () => import("./views/judges/Index.vue")
     },
+    {
+      path: "/judges/create",
+      name: "judges.create",
+      component: () => import("./components/judges/Create.vue")
+    },
     //  Classes
     {
       path: "/classes",
