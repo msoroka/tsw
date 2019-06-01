@@ -20,16 +20,14 @@ export default {
       horse: null
     };
   },
-  props: {
-    horseId: {}
-  },
   mounted() {
+    this.horseId = this.$router.currentRoute.params.horseId;
     this.horse = this.$store.getters.fetchHorseById(this.horseId);
   }
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less">
 .container {
   padding: 20px;
   display: flex;
@@ -39,5 +37,14 @@ export default {
   h1 {
     text-align: center;
   }
+}
+
+input {
+  box-sizing: border-box;
+  border: 0 none;
+  text-align: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
 }
 </style>

@@ -3,23 +3,23 @@
     <table>
       <tr>
         <td>Numer</td>
-        <td>{{ horse.numer }}</td>
+        <td><input type="text" v-model="horse.numer" /></td>
       </tr>
       <tr>
         <td>Klasa</td>
-        <td>{{ horse.klasa }}</td>
+        <td><input type="text" v-model="horse.klasa" /></td>
       </tr>
       <tr>
         <td>Rocznik</td>
-        <td>{{ horse.rocznik }}</td>
+        <td><input type="text" v-model="horse.rocznik" /></td>
       </tr>
       <tr>
         <td>Maść</td>
-        <td>{{ horse.masc }}</td>
+        <td><input type="text" v-model="horse.masc" /></td>
       </tr>
       <tr>
         <td>Płeć</td>
-        <td>{{ horse.plec }}</td>
+        <td><input type="text" v-model="horse.plec" /></td>
       </tr>
     </table>
 
@@ -61,6 +61,7 @@ div {
   display: flex;
   justify-content: space-between;
 }
+
 table {
   border-collapse: collapse;
   margin-top: 20px;
@@ -68,7 +69,11 @@ table {
 
   tr {
     td {
+      text-align: left;
+      border: 1px solid #000;
+
       &:first-child {
+        padding: 5px;
         background: grey;
         color: #fff;
         font-weight: 700;
@@ -78,14 +83,12 @@ table {
       &:last-child {
         text-align: right;
       }
+
+      input {
+        height: 30px;
+        width: 100%;
+      }
     }
   }
-}
-table,
-th,
-td {
-  text-align: left;
-  border: 1px solid black;
-  padding: 5px;
 }
 </style>

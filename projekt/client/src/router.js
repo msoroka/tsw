@@ -20,8 +20,7 @@ export default new Router({
     {
       path: "/horses/:horseId",
       name: "horse",
-      component: () => import("./components/horses/View.vue"),
-      props: true
+      component: () => import("./components/horses/View.vue")
     },
     //  Judges
     {

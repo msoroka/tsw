@@ -33,7 +33,7 @@
           :key="horse.id"
           @click="viewHorse(horse.id)"
         >
-          <td>{{ horse.id }}</td>
+          <td>{{ horse._id }}</td>
           <td>{{ horse.nazwa }}</td>
           <td>{{ horse.kraj }}</td>
         </tr>

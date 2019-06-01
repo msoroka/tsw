@@ -10,7 +10,7 @@
       </thead>
       <tbody>
         <tr v-for="judge in judges" :key="judge.id">
-          <td>{{ judge.id }}</td>
+          <td>{{ judge._id }}</td>
           <td>{{ judge.sedzia }}</td>
           <td>{{ judge.kraj }}</td>
         </tr>

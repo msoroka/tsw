@@ -12,13 +12,17 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(note, index) in notes">
-          <td>{{ getJudge(judges[index]).sedzia }} ({{ getJudge(judges[index]).kraj }})</td>
-          <td>{{ note.typ }}</td>
-          <td>{{ note.glowa }}</td>
-          <td>{{ note.kloda }}</td>
-          <td>{{ note.nogi }}</td>
-          <td>{{ note.ruch }}</td>
+        <tr v-for="(note, index) in notes" :key="index">
+          <td v-if="getJudge(judges[index])">
+            {{ getJudge(judges[index]).sedzia }} ({{
+              getJudge(judges[index]).kraj
+            }})
+          </td>
+          <td><input type="text" v-model="notes[index].typ" /></td>
+          <td><input type="text" v-model="notes[index].glowa" /></td>
+          <td><input type="text" v-model="notes[index].kloda" /></td>
+          <td><input type="text" v-model="notes[index].nogi" /></td>
+          <td><input type="text" v-model="notes[index].ruch" /></td>
         </tr>
       </tbody>
     </table>
@@ -77,6 +81,13 @@ table {
   th {
     background: grey;
     color: #fff;
+  }
+
+  td {
+    input {
+      height: 20px;
+      width: 100%;
+    }
   }
 }
 table,

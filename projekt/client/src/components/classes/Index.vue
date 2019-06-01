@@ -12,7 +12,7 @@
       </thead>
       <tbody>
         <tr v-for="horseClass in classes" :key="horseClass.id">
-          <td>{{ horseClass.id }}</td>
+          <td>{{ horseClass._id }}</td>
           <td>{{ horseClass.numer }}</td>
           <td>{{ horseClass.kat }}</td>
           <td>{{ horseClass.czempionat }}</td>
