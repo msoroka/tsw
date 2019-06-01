@@ -76,7 +76,7 @@ export default {
       const self = this;
 
       axios.post("http://localhost:4000/sedziowie", judge).then(function() {
-        self.$store.commit("ADD_JUDGE", judge);
+        self.$store.dispatch("fetchAllJudges");
         self.$router.push({
           name: "judges"
         });

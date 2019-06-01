@@ -3,17 +3,16 @@
     <table>
       <thead>
         <tr>
-          <th>ID</th>
           <th>Numer</th>
           <th>Kategoria</th>
           <th>Czempionat</th>
           <th>Komisja</th>
+          <th>Akcje</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="horseClass in classes" :key="horseClass.id">
-          <td>{{ horseClass._id }}</td>
-          <td>{{ horseClass.numer }}</td>
+        <tr v-for="horseClass in classes" :key="horseClass._id">
+          <td class="td-action">{{ horseClass.numer }}</td>
           <td>{{ horseClass.kat }}</td>
           <td>{{ horseClass.czempionat }}</td>
           <td>
@@ -21,13 +20,29 @@
               {{ getJudge(sedzia).sedzia }} ({{ getJudge(sedzia).kraj }})<br />
             </span>
           </td>
+          <td class="td-action">
+            <router-link
+              class="btn-edit"
+              :to="{
+                name: 'classes.edit',
+                params: { classId: horseClass._id }
+              }"
+              >Edytuj</router-link
+            >
+            <a class="btn-remove" @click="removeClass(horseClass._id)">Usuń</a>
+          </td>
         </tr>
       </tbody>
     </table>
+    <router-link class="btn-add" to="classes/create"
+      >Dodaj nową klasę</router-link
+    >
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   props: {
     classes: {}
@@ -35,6 +50,16 @@ export default {
   methods: {
     getJudge: function(id) {
       return this.$store.getters.fetchJudgeById(id);
+    },
+    removeClass: function(id) {
+      const self = this;
+
+      axios.delete("http://localhost:4000/klasy/" + id).then(function() {
+        self.$store.dispatch("fetchAllClasses");
+        self.$router.push({
+          name: "classes"
+        });
+      });
     }
   }
 };

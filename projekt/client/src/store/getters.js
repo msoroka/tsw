@@ -2,6 +2,10 @@ let fetchClassByNumber = state => numer => {
   return state.classes.find(cl => cl.numer === numer);
 };
 
+let fetchClassById = state => id => {
+  return state.classes.find(cl => cl._id === id);
+};
+
 let fetchHorseById = state => id => {
   return state.horses.find(horse => horse._id === id);
 };
@@ -16,6 +20,7 @@ let fetchJudgeById = state => id => {
 
 export default {
   fetchClassByNumber,
+  fetchClassById,
   fetchHorseById,
   fetchHorsesByClass,
   fetchJudgeById

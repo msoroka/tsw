@@ -43,6 +43,16 @@ export default new Router({
       path: "/classes",
       name: "classes",
       component: () => import("./views/classes/Index.vue")
+    },
+    {
+      path: "/classes/create",
+      name: "classes.create",
+      component: () => import("./components/classes/Create.vue")
+    },
+    {
+      path: "/classes/:classId/edit",
+      name: "classes.edit",
+      component: () => import("./components/classes/Edit.vue")
     }
   ]
 });
