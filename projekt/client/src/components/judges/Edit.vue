@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>Dodaj sędziego</h1>
+    <h1>Edytuj sędziego</h1>
     <div class="form">
       <div class="form-group">
         <label for="sedzia">Imię i nazwisko</label>
@@ -30,7 +30,7 @@
         }}</span>
       </div>
     </div>
-    <a class="btn-add" @click="checkForm">Dodaj</a>
+    <a class="btn-add" @click="checkForm">Edytuj</a>
   </div>
 </template>
 
@@ -43,11 +43,12 @@ export default {
     return {
       countries: countriesList,
       errors: [],
-      judge: {
-        sedzia: "",
-        kraj: ""
-      }
+      judge: {}
     };
+  },
+  mounted() {
+    this.judgeId = this.$router.currentRoute.params.judgeId;
+    this.judge = this.$store.getters.fetchJudgeById(this.judgeId);
   },
   methods: {
     checkForm: function(e) {
@@ -68,17 +69,12 @@ export default {
       e.preventDefault();
     },
     postJudge: function() {
-      const judge = {
-        sedzia: this.judge.sedzia,
-        kraj: this.judge.kraj
-      };
-
       const self = this;
 
       axios
-        .post("http://localhost:4000/sedziowie", judge)
+        .put("http://localhost:4000/sedziowie/" + this.judge._id, this.judge)
         .then(function(response) {
-          self.$store.commit("ADD_JUDGE", judge);
+          self.$store.dispatch("fetchAllJudges");
           self.$router.push({
             name: "judges"
           });

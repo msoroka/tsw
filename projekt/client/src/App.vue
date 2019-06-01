@@ -70,6 +70,10 @@ body {
   }
 }
 
+.td-action {
+  width: 1%;
+}
+
 .btn-add {
   text-decoration: none;
   margin: 30px auto;
@@ -81,6 +85,32 @@ body {
   font-weight: 700;
   &:hover {
     background: darken(lightgrey, 10%);
+    cursor: pointer;
+  }
+}
+
+.btn-edit {
+  text-decoration: none;
+  background: dodgerblue;
+  color: #fff;
+  font-weight: 700;
+  padding: 3px 5px;
+  margin-right: 5px;
+  &:hover {
+    background: darken(dodgerblue, 10%);
+    cursor: pointer;
+  }
+}
+
+.btn-remove {
+  text-decoration: none;
+  background: orangered;
+  color: #fff;
+  font-weight: 700;
+  padding: 3px 5px;
+  margin: 0 5px;
+  &:hover {
+    background: darken(orangered, 10%);
     cursor: pointer;
   }
 }

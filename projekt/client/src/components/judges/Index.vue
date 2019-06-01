@@ -5,23 +5,50 @@
         <tr>
           <th>Nazwa</th>
           <th>Kraj</th>
+          <th>Akcje</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="judge in judges" :key="judge.id">
           <td>{{ judge.sedzia }}</td>
           <td>{{ judge.kraj }}</td>
+          <td class="td-action">
+            <router-link
+              class="btn-edit"
+              :to="{ name: 'judges.edit', params: { judgeId: judge._id } }"
+              >Edytuj</router-link
+            >
+            <a class="btn-remove" @click="removeJudge(judge._id)">Usuń</a>
+          </td>
         </tr>
       </tbody>
     </table>
-    <router-link class="btn-add" to="judges/create">Dodaj nowego sędziego</router-link>
+    <router-link class="btn-add" to="judges/create"
+      >Dodaj nowego sędziego</router-link
+    >
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   props: {
     judges: {}
+  },
+  methods: {
+    removeJudge: function(id) {
+      const self = this;
+      
+      axios
+        .delete("http://localhost:4000/sedziowie/" + id)
+        .then(function(response) {
+          self.$store.dispatch("fetchAllJudges");
+          self.$router.push({
+            name: "judges"
+          });
+        });
+    }
   }
 };
 </script>

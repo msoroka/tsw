@@ -33,6 +33,11 @@ export default new Router({
       name: "judges.create",
       component: () => import("./components/judges/Create.vue")
     },
+    {
+      path: "/judges/:judgeId/edit",
+      name: "judges.edit",
+      component: () => import("./components/judges/Edit.vue")
+    },
     //  Classes
     {
       path: "/classes",
