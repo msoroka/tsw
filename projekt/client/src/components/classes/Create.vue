@@ -82,6 +82,7 @@ export default {
   },
   methods: {
     checkForm: function(e) {
+      e.preventDefault();
       this.errors = [];
 
       this.selectedKomisja.forEach(val => {
@@ -107,7 +108,13 @@ export default {
         }
       });
 
-      if (this.errors.length === 0) {
+      if (
+        this.errors.length === 0 &&
+        !this.cl.numer &&
+        this.cl.kat &&
+        this.cl.czempionat &&
+        this.cl.komisja.length
+      ) {
         this.postClass();
         return true;
       }
