@@ -32,7 +32,7 @@ exports.getClass = function (req, res, next) {
 };
 
 exports.getClasses = function (req, res, next) {
-    Classes.get({}, function (err, classes) {
+    Classes.find({}, null, {sort: {numer: 1}}, function (err, classes) {
         if (err) {
             res.json({
                 error: err
