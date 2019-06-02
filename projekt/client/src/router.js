@@ -18,6 +18,21 @@ export default new Router({
       component: () => import("./views/horses/Index.vue")
     },
     {
+      path: "/horses/create",
+      name: "horses.create",
+      component: () => import("./components/horses/Create.vue")
+    },
+    {
+      path: "/horses/:horseId/edit",
+      name: "horses.edit",
+      component: () => import("./components/horses/Edit.vue")
+    },
+    {
+      path: "/horses/:horseId/rate",
+      name: "horses.rate",
+      component: () => import("./components/horses/Rate.vue")
+    },
+    {
       path: "/horses/:horseId",
       name: "horse",
       component: () => import("./components/horses/View.vue")

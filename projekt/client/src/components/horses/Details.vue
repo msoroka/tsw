@@ -3,23 +3,23 @@
     <table>
       <tr>
         <td>Numer</td>
-        <td><input type="text" v-model="horse.numer" /></td>
+        <td>{{ horse.numer }}</td>
       </tr>
       <tr>
         <td>Klasa</td>
-        <td><input type="text" v-model="horse.klasa" /></td>
+        <td>{{ horse.klasa }}</td>
       </tr>
       <tr>
         <td>Rocznik</td>
-        <td><input type="text" v-model="horse.rocznik" /></td>
+        <td>{{ horse.rocznik }}</td>
       </tr>
       <tr>
         <td>Maść</td>
-        <td><input type="text" v-model="horse.masc" /></td>
+        <td>{{ horse.masc }}</td>
       </tr>
       <tr>
         <td>Płeć</td>
-        <td><input type="text" v-model="horse.plec" /></td>
+        <td>{{ horse.plec }}</td>
       </tr>
     </table>
 
@@ -82,11 +82,6 @@ table {
 
       &:last-child {
         text-align: right;
-      }
-
-      input {
-        height: 30px;
-        width: 100%;
       }
     }
   }

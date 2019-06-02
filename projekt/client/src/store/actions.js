@@ -10,7 +10,7 @@ let fetchAllClasses = ({ commit }) => {
 };
 
 let fetchAllHorses = ({ commit }) => {
-  axios
+  return axios
     .get("http://localhost:4000/konie")
     .then(r => r.data)
     .then(horses => {

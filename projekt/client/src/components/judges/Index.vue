@@ -40,14 +40,12 @@ export default {
     removeJudge: function(id) {
       const self = this;
 
-      axios
-        .delete("http://localhost:4000/sedziowie/" + id)
-        .then(function(response) {
-          self.$store.dispatch("fetchAllJudges");
-          self.$router.push({
-            name: "judges"
-          });
+      axios.delete("http://localhost:4000/sedziowie/" + id).then(function() {
+        self.$store.dispatch("fetchAllJudges");
+        self.$router.push({
+          name: "judges"
         });
+      });
     }
   }
 };

@@ -18,11 +18,11 @@
               getJudge(judges[index]).kraj
             }})
           </td>
-          <td><input type="text" v-model="notes[index].typ" /></td>
-          <td><input type="text" v-model="notes[index].glowa" /></td>
-          <td><input type="text" v-model="notes[index].kloda" /></td>
-          <td><input type="text" v-model="notes[index].nogi" /></td>
-          <td><input type="text" v-model="notes[index].ruch" /></td>
+          <td>{{ notes[index].typ }}</td>
+          <td>{{ notes[index].glowa }}</td>
+          <td>{{ notes[index].kloda }}</td>
+          <td>{{ notes[index].nogi }}</td>
+          <td>{{ notes[index].ruch }}</td>
         </tr>
       </tbody>
     </table>
@@ -50,6 +50,8 @@ export default {
   },
   methods: {
     countSums: function() {
+      this.notesSum = this.typeSum = this.moveSum = 0;
+
       this.notes.forEach(val => {
         this.notesSum += val.typ + val.glowa + val.kloda + val.nogi + val.ruch;
         this.typeSum += val.typ;
@@ -81,13 +83,6 @@ table {
   th {
     background: grey;
     color: #fff;
-  }
-
-  td {
-    input {
-      height: 20px;
-      width: 100%;
-    }
   }
 }
 table,

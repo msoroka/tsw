@@ -94,7 +94,7 @@ export default {
     this.originalNumber = this.cl.numer;
   },
   methods: {
-    checkForm: function(e) {
+    checkForm: function() {
       this.errors = [];
       this.cl.komisja = [];
 

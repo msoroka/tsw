@@ -110,7 +110,7 @@ export default {
 
       if (
         this.errors.length === 0 &&
-        !this.cl.numer &&
+        this.cl.numer &&
         this.cl.kat &&
         this.cl.czempionat &&
         this.cl.komisja.length

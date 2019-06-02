@@ -38,13 +38,4 @@ export default {
     text-align: center;
   }
 }
-
-input {
-  box-sizing: border-box;
-  border: 0 none;
-  text-align: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-  color: inherit;
-}
 </style>

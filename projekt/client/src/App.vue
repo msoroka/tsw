@@ -19,6 +19,18 @@ export default {
 </script>
 
 <style lang="less">
+.btn-wrap (@background-color) {
+  text-decoration: none;
+  background: @background-color;
+  color: #fff;
+  font-weight: 700;
+  padding: 3px 5px;
+  &:hover {
+    background: darken(@background-color, 10%);
+    cursor: pointer;
+  }
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -39,7 +51,7 @@ body {
 
   .form-group {
     width: 20vw;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     text-align: left;
     display: flex;
     flex-direction: column;
@@ -90,28 +102,22 @@ body {
 }
 
 .btn-edit {
-  text-decoration: none;
-  background: dodgerblue;
-  color: #fff;
-  font-weight: 700;
-  padding: 3px 5px;
-  margin-right: 5px;
-  &:hover {
-    background: darken(dodgerblue, 10%);
-    cursor: pointer;
-  }
+  margin-right: 3px;
+  .btn-wrap(#2B83CD);
 }
 
 .btn-remove {
-  text-decoration: none;
-  background: orangered;
-  color: #fff;
-  font-weight: 700;
-  padding: 3px 5px;
-  margin: 0 5px;
-  &:hover {
-    background: darken(orangered, 10%);
-    cursor: pointer;
-  }
+  margin: 0 3px;
+  .btn-wrap(#EF605F);
+}
+
+.btn-view {
+  margin-left: 3px;
+  .btn-wrap(#FAD04A);
+}
+
+.btn-rate {
+  margin: 0 3px;
+  .btn-wrap(#5ECD72);
 }
 </style>
