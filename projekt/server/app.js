@@ -7,6 +7,7 @@ var db = require('./config/database');
 var judgesRoutes = require('./api/judges/judges.route');
 var classesRoutes = require('./api/classes/classes.route');
 var horsesRoutes = require('./api/horses/horses.route');
+var authRoutes = require('./api/auth/auth.route');
 var app = express();
 
 var bodyParserJSON = bodyParser.json();
@@ -32,6 +33,7 @@ app.use('/', router);
 judgesRoutes(router);
 classesRoutes(router);
 horsesRoutes(router);
+authRoutes(router);
 
 app.listen(properties.PORT, (req, res) => {
     console.log(`Server działa na porcie ${properties.PORT}`);
