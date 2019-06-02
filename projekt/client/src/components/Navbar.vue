@@ -6,9 +6,9 @@
       </div>
       <div class="links">
         <router-link to="/">Ranking</router-link>
-        <router-link to="/horses">Konie</router-link>
-        <router-link to="/judges">Sędziowie</router-link>
-        <router-link to="/classes">Klasy</router-link>
+        <router-link v-if="isLoggedIn" to="/horses">Konie</router-link>
+        <router-link v-if="isLoggedIn" to="/judges">Sędziowie</router-link>
+        <router-link v-if="isLoggedIn" to="/classes">Klasy</router-link>
         <a v-if="!isLoggedIn" @click="showLoginForm">Zaloguj</a>
         <a v-if="isLoggedIn" @click="logout">Wyloguj</a>
       </div>

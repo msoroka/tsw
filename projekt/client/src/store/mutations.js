@@ -36,6 +36,7 @@ let LOGOUT = state => {
   state.status = "";
   state.token = "";
 };
+
 export default {
   FETCH_CLASSES,
   ADD_CLASS,
