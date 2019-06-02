@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <Navbar />
+    <modals-container />
   </div>
 </template>
 <script>
@@ -103,21 +104,21 @@ body {
 
 .btn-edit {
   margin-right: 3px;
-  .btn-wrap(#2B83CD);
+  .btn-wrap(#2b83cd);
 }
 
 .btn-remove {
   margin: 0 3px;
-  .btn-wrap(#EF605F);
+  .btn-wrap(#ef605f);
 }
 
 .btn-view {
   margin-left: 3px;
-  .btn-wrap(#FAD04A);
+  .btn-wrap(#fad04a);
 }
 
 .btn-rate {
   margin: 0 3px;
-  .btn-wrap(#5ECD72);
+  .btn-wrap(#5ecd72);
 }
 </style>

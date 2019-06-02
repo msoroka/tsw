@@ -18,10 +18,20 @@ let fetchJudgeById = state => id => {
   return state.judges.find(judge => judge._id === id);
 };
 
+let isLoggedIn = state => {
+  return !!state.token;
+};
+
+let authStatus = state => {
+  return state.status;
+};
+
 export default {
   fetchClassByNumber,
   fetchClassById,
   fetchHorseById,
   fetchHorsesByClass,
-  fetchJudgeById
+  fetchJudgeById,
+  isLoggedIn,
+  authStatus
 };

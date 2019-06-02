@@ -27,8 +27,39 @@ let fetchAllJudges = ({ commit }) => {
     });
 };
 
+let login = ({ commit }, user) => {
+  return new Promise((resolve, reject) => {
+    commit("AUTH_REQUEST");
+    axios({ url: "http://localhost:4000/login", data: user, method: "POST" })
+      .then(resp => {
+        const token = resp.data.token;
+        const user = resp.data.user;
+        localStorage.setItem("token", token);
+        axios.defaults.headers.common["Authorization"] = token;
+        commit("AUTH_SUCCESS", token, user);
+        resolve(resp);
+      })
+      .catch(err => {
+        commit("AUTH_ERROR");
+        localStorage.removeItem("token");
+        reject(err);
+      });
+  });
+};
+
+let logout = ({ commit }) => {
+  return new Promise((resolve, reject) => {
+    commit("LOGOUT");
+    localStorage.removeItem("token");
+    delete axios.defaults.headers.common["Authorization"];
+    resolve();
+  });
+};
+
 export default {
   fetchAllClasses,
   fetchAllHorses,
-  fetchAllJudges
+  fetchAllJudges,
+  login,
+  logout
 };
