@@ -13,7 +13,7 @@
         <a v-if="isLoggedIn" @click="logout">Wyloguj</a>
       </div>
     </div>
-    <modal name="login-form">
+    <modal name="login-form" :width="400">
       <div class="login-wrap">
         <div>
           <label for="login">Login</label>
