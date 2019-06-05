@@ -1,6 +1,8 @@
 var express = require('express');
 var log = require('morgan')('dev');
 var bodyParser = require('body-parser');
+var cookieSession = require('cookie-session');
+var passport = require('passport');
 
 var properties = require('./config/properties');
 var db = require('./config/database');
@@ -19,7 +21,13 @@ db();
 app.use(log);
 app.use(bodyParserJSON);
 app.use(bodyParserURLEncoded);
-
+app.use(cookieSession({
+    name: 'horseapp',
+    keys: ['vueauthrandomkey'],
+    maxAge: 24 * 60 * 60 * 1000
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(function (req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -27,9 +35,8 @@ app.use(function (req, res, next) {
     res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,Authorization");
     next();
 });
-
-
 app.use('/', router);
+
 judgesRoutes(router);
 classesRoutes(router);
 horsesRoutes(router);
