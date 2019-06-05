@@ -5,6 +5,20 @@
       <div class="form-col">
         <h3>Dane konia</h3>
         <div class="form-group">
+          <label for="numer">Numer</label>
+          <input
+            type="number"
+            min="1"
+            max="9999"
+            step="1"
+            id="numer"
+            v-model="horse.numer"
+          />
+          <span class="form-error" v-if="errors['horse.numer']">{{
+            errors["horse.numer"]
+          }}</span>
+        </div>
+        <div class="form-group">
           <label for="nazwa">Nazwa</label>
           <input type="text" id="nazwa" v-model="horse.nazwa" />
           <span class="form-error" v-if="errors['horse.nazwa']">{{
@@ -266,6 +280,7 @@ export default {
       errors: [],
       classes: {},
       horse: {
+        numer: 1,
         klasa: "",
         nazwa: "",
         kraj: "",
@@ -305,6 +320,7 @@ export default {
       this.errors = [];
 
       if (
+        this.horse.numer &&
         this.horse.nazwa &&
         this.horse.kraj &&
         this.horse.klasa &&
@@ -326,6 +342,9 @@ export default {
         return true;
       }
 
+      if (!this.horse.nazwa) {
+        this.errors["horse.numer"] = "Numer wymagany.";
+      }
       if (!this.horse.nazwa) {
         this.errors["horse.nazwa"] = "Nazwa wymagana.";
       }
@@ -379,7 +398,7 @@ export default {
     },
     postHorse: function() {
       const horse = {
-        numer: 1,
+        numer: this.horse.numer,
         klasa: this.horse.klasa,
         nazwa: this.horse.nazwa,
         kraj: this.horse.kraj,

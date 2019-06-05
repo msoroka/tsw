@@ -20,16 +20,14 @@ exports.createHorse = function (req, res, next) {
         noty: []
     };
 
-    var max = 0;
-
     Horses.find({}, function (err, horses) {
         horses.forEach(val => {
-            if (val.numer > max) {
-                max = val.numer;
+            if (val.numer >= req.body.numer) {
+                val.numer = val.numer + 1;
+                Horses.update({_id: val._id}, val, function (err, val) {
+                });
             }
         });
-
-        horse.numer = parseInt(max) + 1;
     }).then(function () {
         Classes.findOne({numer: req.body.klasa}, function (err, cl) {
             for (let i = 0; i < cl.komisja.length; i++) {
@@ -96,11 +94,30 @@ exports.updateHorse = function (req, res, next) {
     };
 
     Horses.findOne({_id: req.params.id}, function (err, h) {
-        if(h.klasa !== req.body.klasa) {
+        if (h.numer !== req.body.numer) {
+            Horses.find({}, null, {sort: {numer: 1}}, function (err, horses) {
+                let isChanged = false;
+                horses.forEach(val => {
+                    if (val._id.toString() !== req.params.id) {
+                        if (isChanged) {
+                            val.numer = val.numer + 1;
+                            Horses.update({_id: val._id}, val, function (err, val) {
+                            });
+                        }
+                        if (val.numer == req.body.numer) {
+                            val.numer = val.numer + 1;
+                            isChanged = true;
+                            Horses.update({_id: val._id}, val, function (err, val) {
+                            });
+                        }
+                    }
+                });
+            });
+        }
+        if (h.klasa !== req.body.klasa) {
             horse.wynik = {
                 noty: []
             };
-            console.log('test');
 
             Classes.findOne({numer: req.body.klasa}, function (err, cl) {
                 for (let i = 0; i < cl.komisja.length; i++) {
