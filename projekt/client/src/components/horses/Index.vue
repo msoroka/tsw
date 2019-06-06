@@ -31,7 +31,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="horse in horses" :key="horse._id">
+        <tr v-for="horse in horses" :key="horse._id" :class="{'rozjemca-background': horse.wynik.rozjemca[0] === -1 && horse.wynik.rozjemca[3] === 0}">
           <td class="td-action">{{ horse.numer }}</td>
           <td>{{ horse.nazwa }}</td>
           <td>{{ horse.kraj }}</td>
@@ -167,6 +167,10 @@ export default {
     border-collapse: collapse;
     margin-top: 20px;
     width: 100%;
+
+    .rozjemca-background {
+      background: #FFCCCC;
+    }
 
     th {
       background: grey;

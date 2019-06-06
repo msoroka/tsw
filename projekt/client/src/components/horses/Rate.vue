@@ -65,6 +65,28 @@
         </tr>
       </tbody>
     </table>
+    <div class="form-group form-rozjemca" v-if="horse.wynik.rozjemca[0] === -1">
+      <h3>Ocena wymaga interwencji rozjemcy</h3>
+      <p>Konie, których dotyczy decyzja:</p>
+      <ul>
+        <li v-for="id in horse.wynik.rozjemca[2]" :key="id">
+          {{ getHorse(id).nazwa }} ({{ getHorse(id).kraj }})
+        </li>
+      </ul>
+      <label for="horse.wynik.rozjemca[3]">Wynik rozjemcy</label>
+      <select
+        id="horse.wynik.rozjemca[3]"
+        v-model="horse.wynik.rozjemca[3]"
+        name=""
+      >
+        <option
+          :key="i"
+          v-for="i in horse.wynik.rozjemca[1]"
+          v-bind:value="i"
+          >{{ i }}</option
+        >
+      </select>
+    </div>
     <a class="btn-add" @click="saveForm">Zapisz</a>
   </div>
 </template>
@@ -94,9 +116,13 @@ export default {
     getJudge: function(id) {
       return this.$store.getters.fetchJudgeById(id);
     },
-
+    getHorse: function(id) {
+      return this.$store.getters.fetchHorseById(id);
+    },
     saveForm: function() {
       const self = this;
+
+      console.log(this.horse);
 
       axios
         .put("http://localhost:4000/konie/" + this.horse._id, this.horse)
