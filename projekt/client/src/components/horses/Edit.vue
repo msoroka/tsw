@@ -375,17 +375,15 @@ export default {
     postHorse: function() {
       localStorage.setItem("class", this.horse.klasa);
 
-      const self = this;
-
-      axios
-        .put("http://localhost:4000/konie/" + this.horse._id, this.horse)
-        .then(function() {
-          self.$store.dispatch("fetchAllHorses").then(function() {
-            self.$router.push({
-              name: "horses"
-            });
+      this.$store.dispatch("editHorse", this.horse).then(() => {
+        this.$socket.emit("ranking", this.horse.klasa);
+        this.$store.dispatch("fetchAllHorses").then((horses) => {
+          console.log(horses);
+          this.$router.push({
+            name: "horses"
           });
         });
+      });
     }
   }
 };

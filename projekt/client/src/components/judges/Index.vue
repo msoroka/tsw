@@ -30,20 +30,17 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   props: {
     judges: {}
   },
   methods: {
     removeJudge: function(id) {
-      const self = this;
-
-      axios.delete("http://localhost:4000/sedziowie/" + id).then(function() {
-        self.$store.dispatch("fetchAllJudges");
-        self.$router.push({
-          name: "judges"
+      this.$store.dispatch("removeJudge", id).then(() => {
+        this.$store.dispatch("fetchAllJudges").then(() => {
+          this.$router.push({
+            name: "judges"
+          });
         });
       });
     }

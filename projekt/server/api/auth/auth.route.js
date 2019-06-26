@@ -6,7 +6,7 @@ module.exports = function (router) {
         {
             id: 1,
             login: "msoroka",
-            password: "Alsen1.pl"
+            password: "test123"
         }
     ];
 

@@ -31,7 +31,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="horse in horses" :key="horse._id" :class="{'rozjemca-background': horse.wynik.rozjemca[0] === -1 && horse.wynik.rozjemca[3] === 0}">
+        <tr v-for="horse in horses" :key="horse._id" :class="{'rozjemca-background': horse.wynik.rozjemca === 0}">
           <td class="td-action">{{ horse.numer }}</td>
           <td>{{ horse.nazwa }}</td>
           <td>{{ horse.kraj }}</td>
@@ -63,7 +63,6 @@
 
 <script>
 import { mapState } from "vuex";
-import axios from "axios";
 
 export default {
   data: function() {
@@ -101,11 +100,10 @@ export default {
       });
     },
     removeHorse: function(id) {
-      const self = this;
-
-      axios.delete("http://localhost:4000/konie/" + id).then(function() {
-        self.$store.dispatch("fetchAllHorses").then(function() {
-          self.$router.push({
+      this.$store.dispatch("removeHorse", id).then(() => {
+        this.$store.dispatch("fetchAllHorses").then(() => {
+          this.getHorsesByClass(parseInt(localStorage.getItem("class")));
+          this.$router.push({
             name: "horses"
           });
         });

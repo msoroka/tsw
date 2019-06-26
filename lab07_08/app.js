@@ -7,7 +7,7 @@ var express = require("express"),
     bodyParser = require("body-parser"),
     lessMiddleware = require('less-middleware');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3030;
 
 app.use(function (_req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -26,6 +26,6 @@ app.use(express.static(__dirname + '/public'));
 
 app.use('/', routes);
 
-app.listen(3000, function () {
+app.listen(PORT, function () {
     console.log("Mastermind is running on port " + PORT);
 });

@@ -1,9 +1,27 @@
 var express = require('express');
 var log = require('morgan')('dev');
 var bodyParser = require('body-parser');
-var cookieSession = require('cookie-session');
-var passport = require('passport');
+var session = require('express-session');
+var RedisStore = require('connect-redis')(session);
+var cors = require('cors');
 
+const sessionStore = new RedisStore({
+    host: 'localhost',
+    port: 6379,
+    client: require('redis').createClient(),
+    disableTTL: true
+});
+
+sessionStore.on("error", function (err) {
+    console.log("Error " + err);
+});
+
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var socketIo = require('socket.io');
+var passportSocketIo = require('passport.socketio');
+
+var cookieParser = require('cookie-parser');
 var properties = require('./config/properties');
 var db = require('./config/database');
 var judgesRoutes = require('./api/judges/judges.route');
@@ -11,37 +29,181 @@ var classesRoutes = require('./api/classes/classes.route');
 var horsesRoutes = require('./api/horses/horses.route');
 var authRoutes = require('./api/auth/auth.route');
 var app = express();
-
-var bodyParserJSON = bodyParser.json();
-var bodyParserURLEncoded = bodyParser.urlencoded({extended: true});
 var router = express.Router();
 
 db();
 
+passport.serializeUser((user, done) => {
+    done(null, user);
+});
+
+passport.deserializeUser((obj, done) => {
+    done(null, obj);
+});
+
+passport.use(new LocalStrategy(
+    (username, password, done) => {
+        if ((username === 'admin') && (password === 'tajne')) {
+            return done(null, {
+                username: username,
+                password: password
+            });
+        } else {
+            return done(null, false);
+        }
+    }
+));
+
 app.use(log);
-app.use(bodyParserJSON);
-app.use(bodyParserURLEncoded);
-app.use(cookieSession({
-    name: 'horseapp',
-    keys: ['vueauthrandomkey'],
-    maxAge: 24 * 60 * 60 * 1000
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(cookieParser());
+app.use(cors({
+    credentials: true,
+    origin: function (origin, callback) {
+        return callback(null, true);
+    },
+}));
+
+var sessionSecret = 'Wielki$ekret44';
+var sessionKey = 'express.sid';
+app.use(session({
+    key: sessionKey,
+    secret: sessionSecret,
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false,
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(function (req, res, next) {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,DELETE");
-    res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,Authorization");
-    next();
+
+app.post('/login',
+    passport.authenticate('local'),
+    (req, res) => {
+        res.status(200).send();
+    }
+);
+app.get('/logout', (req, res) => {
+    req.logout();
+    res.send("Wylogowano");
 });
+
+var Horses = require('./api/horses/horses.dao');
+
+var getSumPoints = (horse) => {
+    var horseTyp = 0;
+    var horseGlowa = 0;
+    var horseKloda = 0;
+    var horseNogi = 0;
+    var horseRuch = 0;
+    var horseSuma = 0;
+    Array.from(horse.wynik.noty).forEach(hw => {
+        horseTyp += Number(hw.typ);
+        horseGlowa += Number(hw.glowa);
+        horseKloda += Number(hw.kloda);
+        horseNogi += Number(hw.nogi);
+        horseRuch += Number(hw.ruch);
+    });
+    horseSuma = horseTyp + horseGlowa + horseKloda + horseNogi + horseRuch;
+
+    return horseSuma;
+};
+
+var getTypeSumPoints = (horse) => {
+    var horseTyp = 0;
+    Array.from(horse.wynik.noty).forEach(hw => {
+        horseTyp += Number(hw.typ);
+    });
+
+    return horseTyp;
+};
+
+var getMoveSumPoints = (horse) => {
+    var horseRuch = 0;
+    Array.from(horse.wynik.noty).forEach(hw => {
+        horseRuch += Number(hw.ruch);
+    });
+
+    return horseRuch;
+};
+
+var compare = (a,b) => {
+    if ( getSumPoints(a) > getSumPoints(b) ){
+        return -1;
+    }
+    else if ( getSumPoints(a) < getSumPoints(b) ){
+        return 1;
+    }
+    else {
+        if ( getTypeSumPoints(a) > getTypeSumPoints(b) ){
+            return -1;
+        }
+        else if ( getTypeSumPoints(a) < getTypeSumPoints(b) ){
+            return 1;
+        }
+        else {
+            if ( getMoveSumPoints(a) > getMoveSumPoints(b) ){
+                return -1;
+            }
+            else if ( getMoveSumPoints(a) < getMoveSumPoints(b) ){
+                return 1;
+            }
+            else {
+                if ( a.wynik.rozjemca < b.wynik.rozjemca ){
+                    return -1;
+                }
+                else if ( a.wynik.rozjemca > b.wynik.rozjemca ){
+                    return 1;
+                }
+                else {
+                    return 0;
+                }
+            }
+        }
+    }
+};
+
+var server = require('http').createServer(app);
+
+var sio = socketIo.listen(server);
+var onAuthorizeSuccess = (data, accept) => {
+    accept();
+};
+var onAuthorizeFail = (data, message, error, accept) => {
+    accept();
+};
+sio.use(passportSocketIo.authorize({
+    cookieParser: cookieParser,
+    key: sessionKey,
+    secret: sessionSecret,
+    store: sessionStore,
+    success: onAuthorizeSuccess,
+    fail: onAuthorizeFail
+}));
+
+sio.sockets.on('connection', function (socket) {
+    socket.on('ranking', function (data) {
+        Horses.find({ klasa: data }, function (err, horses) {
+            sio.emit('ranking', horses.sort(compare));
+        });
+    });
+    // console.log(socket.request.sessionID, socket.request.user);
+    // socket.emit('AUTHORIZED', socket.request.user);
+});
+
 app.use('/', router);
+
+app.get("/user", (req, res) => {
+    console.log(req);
+    res.send(req.session.passport);
+});
 
 judgesRoutes(router);
 classesRoutes(router);
 horsesRoutes(router);
-authRoutes(router);
 
-app.listen(properties.PORT, (req, res) => {
-    console.log(`Server działa na porcie ${properties.PORT}`);
+server.listen(properties.PORT, () => {
+    console.log(`Serwer ${properties.PORT}`);
 });

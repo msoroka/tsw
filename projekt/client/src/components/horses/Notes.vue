@@ -31,6 +31,9 @@
       <p>Suma ruch: {{ moveSum }}</p>
       <p>Suma not: {{ notesSum }}</p>
     </div>
+    <div v-if="horse.wynik.rozjemca !== 0 && horse.wynik.rozjemca.length !== 0">
+      <h3>Ocena rozjemcy: {{ horse.wynik.rozjemca }}</h3>
+    </div>
   </div>
 </template>
 

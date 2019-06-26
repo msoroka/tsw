@@ -5,13 +5,13 @@
       <div class="form-col">
         <h3>Dane konia</h3>
         <div class="form-group">
-          <label for="numer">Numer</label>
+          <label for="horse.numer">Numer</label>
           <input
             type="number"
             min="1"
             max="9999"
             step="1"
-            id="numer"
+            id="horse.numer"
             v-model="horse.numer"
           />
           <span class="form-error" v-if="errors['horse.numer']">{{
@@ -342,7 +342,7 @@ export default {
         return true;
       }
 
-      if (!this.horse.nazwa) {
+      if (!this.horse.numer) {
         this.errors["horse.numer"] = "Numer wymagany.";
       }
       if (!this.horse.nazwa) {
@@ -431,12 +431,12 @@ export default {
 
       localStorage.setItem("class", this.horse.klasa);
 
-      const self = this;
-
-      axios.post("http://localhost:4000/konie", horse).then(function() {
-        self.$store.dispatch("fetchAllHorses");
-        self.$router.push({
-          name: "horses"
+      this.$store.dispatch("addHorse", horse).then(() => {
+        this.$socket.emit("ranking", horse.klasa);
+        this.$store.dispatch("fetchAllHorses").then(() => {
+          this.$router.push({
+            name: "horses"
+          });
         });
       });
     }

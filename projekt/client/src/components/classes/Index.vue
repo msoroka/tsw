@@ -16,7 +16,7 @@
           <td>{{ horseClass.kat }}</td>
           <td>{{ horseClass.czempionat }}</td>
           <td>
-            <span v-for="sedzia in horseClass.komisja" :key="sedzia">
+            <span v-for="sedzia in horseClass.komisja">
               {{ getJudge(sedzia).sedzia }} ({{ getJudge(sedzia).kraj }})<br />
             </span>
           </td>
@@ -41,8 +41,6 @@
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   props: {
     classes: {}
@@ -52,12 +50,11 @@ export default {
       return this.$store.getters.fetchJudgeById(id);
     },
     removeClass: function(id) {
-      const self = this;
-
-      axios.delete("http://localhost:4000/klasy/" + id).then(function() {
-        self.$store.dispatch("fetchAllClasses");
-        self.$router.push({
-          name: "classes"
+      this.$store.dispatch("removeClass", id).then(() => {
+        this.$store.dispatch("fetchAllClasses").then(() => {
+          this.$router.push({
+            name: "classes"
+          });
         });
       });
     }

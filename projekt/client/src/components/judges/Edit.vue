@@ -36,7 +36,6 @@
 
 <script>
 import countriesList from "../../assets/countries.json";
-import axios from "axios";
 
 export default {
   data() {
@@ -69,16 +68,13 @@ export default {
       e.preventDefault();
     },
     postJudge: function() {
-      const self = this;
-
-      axios
-        .put("http://localhost:4000/sedziowie/" + this.judge._id, this.judge)
-        .then(function() {
-          self.$store.dispatch("fetchAllJudges");
-          self.$router.push({
+      this.$store.dispatch("editJudge", this.judge).then(() => {
+        this.$store.dispatch("fetchAllJudges").then(() => {
+          this.$router.push({
             name: "judges"
           });
         });
+      });
     }
   }
 };

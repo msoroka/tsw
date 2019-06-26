@@ -1,65 +1,97 @@
 import axios from "axios";
+import ip from "ip";
+
+console.log(ip.address());
+
+const URL = "http://localhost:4000";
 
 let fetchAllClasses = ({ commit }) => {
-  axios
-    .get("http://localhost:4000/klasy")
+  return axios
+    .get(URL + "/klasy")
     .then(r => r.data)
     .then(classes => {
       commit("FETCH_CLASSES", classes);
     });
 };
 
+let addClass = ({ commit }, cl) => {
+  return axios.post(URL + "/klasy", cl);
+};
+
+let editClass = ({ commit }, cl) => {
+  return axios.put(URL + "/klasy/" + cl._id, cl);
+};
+
+let removeClass = ({ commit }, id) => {
+  return axios.delete(URL + "/klasy/" + id);
+};
+
 let fetchAllHorses = ({ commit }) => {
   return axios
-    .get("http://localhost:4000/konie")
+    .get(URL + "/konie")
     .then(r => r.data)
     .then(horses => {
       commit("FETCH_HORSES", horses);
+      return horses;
     });
 };
 
+let addHorse = ({ commit }, horse) => {
+  return axios.post(URL + "/konie", horse);
+};
+
+let editHorse = ({ commit }, horse) => {
+  return axios.put(URL + "/konie/" + horse._id, horse);
+};
+
+let removeHorse = ({ commit }, id) => {
+  return axios.delete(URL + "/konie/" + id);
+};
+
 let fetchAllJudges = ({ commit }) => {
-  axios
-    .get("http://localhost:4000/sedziowie")
+  return axios
+    .get(URL + "/sedziowie")
     .then(r => r.data)
     .then(judges => {
       commit("FETCH_JUDGES", judges);
     });
 };
 
+let addJudge = ({ commit }, judge) => {
+  return axios.post(URL + "/sedziowie", judge);
+};
+
+let editJudge = ({ commit }, judge) => {
+  return axios.put(URL + "/sedziowie/" + judge._id, judge);
+};
+
+let removeJudge = ({ commit }, id) => {
+  return axios.delete(URL + "/sedziowie/" + id);
+};
+
 let login = ({ commit }, user) => {
-  return new Promise((resolve, reject) => {
-    commit("AUTH_REQUEST");
-    axios({ url: "http://localhost:4000/login", data: user, method: "POST" })
-      .then(resp => {
-        const token = resp.data.token;
-        const user = resp.data.user;
-        localStorage.setItem("token", token);
-        axios.defaults.headers.common["Authorization"] = token;
-        commit("AUTH_SUCCESS", token, user);
-        resolve(resp);
-      })
-      .catch(err => {
-        commit("AUTH_ERROR");
-        localStorage.removeItem("token");
-        reject(err);
-      });
+  return axios.post(URL + "/login", user).then(data => {
+
   });
 };
 
 let logout = ({ commit }) => {
-  return new Promise((resolve, reject) => {
-    commit("LOGOUT");
-    localStorage.removeItem("token");
-    delete axios.defaults.headers.common["Authorization"];
-    resolve();
-  });
+  return axios.get(URL + "/logout");
 };
 
 export default {
   fetchAllClasses,
+  addClass,
+  editClass,
+  removeClass,
   fetchAllHorses,
+  addHorse,
+  editHorse,
+  removeHorse,
   fetchAllJudges,
+  addJudge,
+  editJudge,
+  removeJudge,
   login,
   logout
 };

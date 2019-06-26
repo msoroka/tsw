@@ -13,9 +13,7 @@ export default new Vuex.Store({
     classes: {},
     horses: {},
     judges: {},
-    status: "",
-    token: localStorage.getItem("token") || "",
-    user: {}
+    loggedIn: false
   },
   actions,
   mutations,

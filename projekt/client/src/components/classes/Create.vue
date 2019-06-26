@@ -57,7 +57,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import Multiselect from "vue-multiselect";
 
 export default {
@@ -127,12 +126,11 @@ export default {
         komisja: this.cl.komisja
       };
 
-      const self = this;
-
-      axios.post("http://localhost:4000/klasy", cl).then(function() {
-        self.$store.dispatch("fetchAllClasses");
-        self.$router.push({
-          name: "classes"
+      this.$store.dispatch("addClass", cl).then(() => {
+        this.$store.dispatch("fetchAllClasses").then(() => {
+          this.$router.push({
+            name: "classes"
+          });
         });
       });
     }

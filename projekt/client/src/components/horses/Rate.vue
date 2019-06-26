@@ -65,27 +65,16 @@
         </tr>
       </tbody>
     </table>
-    <div class="form-group form-rozjemca" v-if="horse.wynik.rozjemca[0] === -1">
+    <div v-if="horse.wynik.rozjemca !== 0 && horse.wynik.rozjemca.length !== 0">
+      <h3>Ocena rozjemcy: {{ horse.wynik.rozjemca }}</h3>
+    </div>
+    <div class="form-group form-rozjemca" v-if="tempRozj === 0">
       <h3>Ocena wymaga interwencji rozjemcy</h3>
-      <p>Konie, których dotyczy decyzja:</p>
+      <p>Konie z taką samą punktacją:</p>
       <ul>
-        <li v-for="id in horse.wynik.rozjemca[2]" :key="id">
-          {{ getHorse(id).nazwa }} ({{ getHorse(id).kraj }})
-        </li>
+        <li v-bind:key="h._id" v-for="h in this.$store.getters.getHorsesWithIdentNotes(horse)">{{ h.nazwa }} - wynik rozjemcy {{ h.wynik.rozjemca }}</li>
       </ul>
-      <label for="horse.wynik.rozjemca[3]">Wynik rozjemcy</label>
-      <select
-        id="horse.wynik.rozjemca[3]"
-        v-model="horse.wynik.rozjemca[3]"
-        name=""
-      >
-        <option
-          :key="i"
-          v-for="i in horse.wynik.rozjemca[1]"
-          v-bind:value="i"
-          >{{ i }}</option
-        >
-      </select>
+      <input type="text" v-model="horse.wynik.rozjemca">
     </div>
     <a class="btn-add" @click="saveForm">Zapisz</a>
   </div>
@@ -99,13 +88,15 @@ export default {
       errors: [],
       horse: {},
       judges: [],
-      notesName: ["Typ", "Głowa", "Kłoda", "Nogi", "Ruch"]
+      notesName: ["Typ", "Głowa", "Kłoda", "Nogi", "Ruch"],
+      tempRozj: 0
     };
   },
   mounted() {
     this.horseId = this.$router.currentRoute.params.horseId;
     this.horse = this.$store.getters.fetchHorseById(this.horseId);
     this.getJudges();
+    this.tempRozj = this.horse.wynik.rozjemca;
   },
   methods: {
     getJudges: function() {
@@ -120,18 +111,14 @@ export default {
       return this.$store.getters.fetchHorseById(id);
     },
     saveForm: function() {
-      const self = this;
-
-      console.log(this.horse);
-
-      axios
-        .put("http://localhost:4000/konie/" + this.horse._id, this.horse)
-        .then(function() {
-          self.$store.dispatch("fetchAllHorses");
-          self.$router.push({
+      this.$store.dispatch("editHorse", this.horse).then(() => {
+        this.$socket.emit("ranking", this.horse.klasa);
+        this.$store.dispatch("fetchAllHorses").then(() => {
+          this.$router.push({
             name: "horses"
           });
         });
+      });
     }
   }
 };

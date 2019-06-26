@@ -16,8 +16,8 @@
     <modal name="login-form" :width="400">
       <div class="login-wrap">
         <div>
-          <label for="login">Login</label>
-          <input type="text" id="login" v-model="login" />
+          <label for="username">Login</label>
+          <input type="text" id="username" v-model="username" />
         </div>
         <div>
           <label for="password">Hasło</label>
@@ -38,14 +38,14 @@ export default {
   name: "Navbar",
   data: function() {
     return {
-      login: "",
+      username: "",
       password: "",
       wrongCreds: false
     };
   },
   computed: {
     isLoggedIn: function() {
-      return this.$store.getters.isLoggedIn;
+      return this.$store.state.loggedIn;
     }
   },
   methods: {
@@ -53,14 +53,14 @@ export default {
       this.$modal.show("login-form");
     },
     tryToLogin: function() {
-      let login = this.login;
+      let username = this.username;
       let password = this.password;
       this.$store
-        .dispatch("login", { login, password })
+        .dispatch("login", { username, password })
         .then(() => {
           this.$router.push("/horses");
           this.wrongCreds = false;
-          this.login = "";
+          this.username = "";
           this.password = "";
           this.$modal.hide("login-form");
         })
