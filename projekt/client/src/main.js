@@ -7,8 +7,8 @@ import router from "./router";
 
 Vue.use(
   new VueSocketIO({
-    debug: true,
-    connection: "http://localhost:4000",
+    debug: false,
+    connection: "http://" + window.location.hostname + ":4000",
     vuex: {
       store,
       actionPrefix: "SOCKET_",

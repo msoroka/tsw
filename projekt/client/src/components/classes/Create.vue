@@ -127,10 +127,8 @@ export default {
       };
 
       this.$store.dispatch("addClass", cl).then(() => {
-        this.$store.dispatch("fetchAllClasses").then(() => {
-          this.$router.push({
-            name: "classes"
-          });
+        this.$router.push({
+          name: "classes"
         });
       });
     }

@@ -70,7 +70,7 @@ module.exports = () => {
                 klasy[idx].czempionat = klasyCzempionatowe.get("ogiery młodsze");
             }
         }
-      })
+      });
     return klasy;
   })();
 
@@ -81,7 +81,7 @@ module.exports = () => {
     };
     let tot = klasy.length - (czempRocznych ? 3 : 2);
     for (let cno = 1; cno <= tot; cno += 1) {
-      let n = faker.random.number({min: 7, max: 17})
+      let n = faker.random.number({min: 7, max: 17});
       info.total += n;
       info.breaks.push(info.total)
     }
@@ -92,7 +92,7 @@ module.exports = () => {
     let idx = 0;
     while (nr > liczebnoscKlas.breaks[idx]) { idx += 1 }
     return idx + 1;
-  }
+  };
 
   const sedziowie = _.times(liczebnoscKomisji + 2, (nr) => {
       return {
@@ -173,4 +173,4 @@ module.exports = () => {
       }
     })
   }
-}
+};

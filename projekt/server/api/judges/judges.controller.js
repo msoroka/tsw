@@ -1,21 +1,21 @@
 var Judges = require('./judges.dao');
 
 exports.createJudge = function (req, res, next) {
-    var judge = {
-        sedzia: req.body.sedzia,
-        kraj: req.body.kraj
-    };
+    if (req.isAuthenticated()) {
+        var judge = {
+            sedzia: req.body.sedzia,
+            kraj: req.body.kraj
+        };
 
-    Judges.create(judge, function (err, judge) {
-        if (err) {
-            res.json({
-                error: err
-            })
-        }
-        res.json({
-            message: "Judge created successfully"
+        Judges.create(judge, function (err, judge) {
+            if (err) {
+                res.json({
+                    error: err
+                })
+            }
+            res.send(judge);
         })
-    })
+    }
 };
 
 exports.getJudge = function (req, res, next) {
@@ -41,32 +41,36 @@ exports.getJudges = function (req, res, next) {
 };
 
 exports.updateJudge = function (req, res, next) {
-    var judge = {
-        sedzia: req.body.sedzia,
-        kraj: req.body.kraj
-    };
+    if (req.isAuthenticated()) {
+        var judge = {
+            sedzia: req.body.sedzia,
+            kraj: req.body.kraj
+        };
 
-    Judges.update({_id: req.params.id}, judge, function (err, judge) {
-        if (err) {
+        Judges.update({_id: req.params.id}, judge, function (err, judge) {
+            if (err) {
+                res.json({
+                    error: err
+                })
+            }
             res.json({
-                error: err
+                message: "Judge updated successfully"
             })
-        }
-        res.json({
-            message: "Judge updated successfully"
         })
-    })
-}
+    }
+};
 
 exports.removeJudge = function (req, res, next) {
-    Judges.delete({_id: req.params.id}, function (err, judge) {
-        if (err) {
+    if (req.isAuthenticated()) {
+        Judges.delete({_id: req.params.id}, function (err, judge) {
+            if (err) {
+                res.json({
+                    error: err
+                })
+            }
             res.json({
-                error: err
+                message: "Judge deleted successfully"
             })
-        }
-        res.json({
-            message: "Judge deleted successfully"
         })
-    })
-}
+    }
+};

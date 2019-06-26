@@ -18,6 +18,21 @@ let fetchJudgeById = state => id => {
   return state.judges.find(judge => judge._id === id);
 };
 
+let classHasHorses = state => cl => {
+  return state.horses.filter(horse => horse.klasa === cl).length;
+};
+
+let judgeHasClass = state => id => {
+  let result = false;
+  state.classes.forEach(val => {
+    if(val.komisja.includes(id)) {
+      result = true;
+    }
+  });
+
+  return result;
+};
+
 let getHorsePoints = state => horse => {
   let horseTyp = 0;
   let horseGlowa = 0;
@@ -35,7 +50,7 @@ let getHorsePoints = state => horse => {
   horseSuma = horseTyp + horseGlowa + horseKloda + horseNogi + horseRuch;
 
   return horseSuma;
-}
+};
 
 let getHorsesWithIdentNotes = state => horse => {
   let horseTyp = 0;
@@ -84,6 +99,8 @@ export default {
   fetchClassByNumber,
   fetchClassById,
   fetchHorseById,
+  classHasHorses,
+  judgeHasClass,
   fetchHorsesByClass,
   fetchJudgeById,
   getHorsePoints,

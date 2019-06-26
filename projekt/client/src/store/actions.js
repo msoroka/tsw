@@ -1,12 +1,13 @@
 import axios from "axios";
-import ip from "ip";
 
-console.log(ip.address());
+const URL = "http://" + window.location.hostname + ":4000";
 
-const URL = "http://localhost:4000";
+let transport = axios.create({
+  withCredentials: true
+});
 
 let fetchAllClasses = ({ commit }) => {
-  return axios
+  return transport
     .get(URL + "/klasy")
     .then(r => r.data)
     .then(classes => {
@@ -15,19 +16,22 @@ let fetchAllClasses = ({ commit }) => {
 };
 
 let addClass = ({ commit }, cl) => {
-  return axios.post(URL + "/klasy", cl);
+  return transport.post(URL + "/klasy", cl).then((response) => {
+    commit("ADD_CLASS", response.data);
+    return response.data;
+  });
 };
 
 let editClass = ({ commit }, cl) => {
-  return axios.put(URL + "/klasy/" + cl._id, cl);
+  return transport.put(URL + "/klasy/" + cl._id, cl);
 };
 
 let removeClass = ({ commit }, id) => {
-  return axios.delete(URL + "/klasy/" + id);
+  return transport.delete(URL + "/klasy/" + id);
 };
 
 let fetchAllHorses = ({ commit }) => {
-  return axios
+  return transport
     .get(URL + "/konie")
     .then(r => r.data)
     .then(horses => {
@@ -37,19 +41,22 @@ let fetchAllHorses = ({ commit }) => {
 };
 
 let addHorse = ({ commit }, horse) => {
-  return axios.post(URL + "/konie", horse);
+  return transport.post(URL + "/konie", horse).then((response) => {
+    commit("ADD_HORSE", response.data);
+    return response.data;
+  });
 };
 
 let editHorse = ({ commit }, horse) => {
-  return axios.put(URL + "/konie/" + horse._id, horse);
+  return transport.put(URL + "/konie/" + horse._id, horse);
 };
 
 let removeHorse = ({ commit }, id) => {
-  return axios.delete(URL + "/konie/" + id);
+  return transport.delete(URL + "/konie/" + id);
 };
 
 let fetchAllJudges = ({ commit }) => {
-  return axios
+  return transport
     .get(URL + "/sedziowie")
     .then(r => r.data)
     .then(judges => {
@@ -58,25 +65,30 @@ let fetchAllJudges = ({ commit }) => {
 };
 
 let addJudge = ({ commit }, judge) => {
-  return axios.post(URL + "/sedziowie", judge);
+  return transport.post(URL + "/sedziowie", judge).then((response) => {
+    commit("ADD_JUDGE", response.data);
+    return response.data;
+  });
 };
 
 let editJudge = ({ commit }, judge) => {
-  return axios.put(URL + "/sedziowie/" + judge._id, judge);
+  return transport.put(URL + "/sedziowie/" + judge._id, judge);
 };
 
 let removeJudge = ({ commit }, id) => {
-  return axios.delete(URL + "/sedziowie/" + id);
+  return transport.delete(URL + "/sedziowie/" + id);
 };
 
 let login = ({ commit }, user) => {
-  return axios.post(URL + "/login", user).then(data => {
-
+  return transport.post(URL + "/login", user).then(function(response) {
+    commit("SOCKET_AUTHORIZED", response.data);
   });
 };
 
 let logout = ({ commit }) => {
-  return axios.get(URL + "/logout");
+  return transport.get(URL + "/logout").then(function(response) {
+    commit("SOCKET_AUTHORIZED", response.data);
+  });
 };
 
 export default {

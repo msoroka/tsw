@@ -1,6 +1,5 @@
 import Vuex from "vuex";
 import Vue from "vue";
-import VuexPersistence from "vuex-persist";
 
 import actions from "./actions";
 import getters from "./getters";
@@ -17,6 +16,5 @@ export default new Vuex.Store({
   },
   actions,
   mutations,
-  getters,
-  plugins: [new VuexPersistence().plugin]
+  getters
 });

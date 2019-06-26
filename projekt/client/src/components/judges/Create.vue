@@ -73,10 +73,8 @@ export default {
       };
 
       this.$store.dispatch("addJudge", judge).then(() => {
-        this.$store.dispatch("fetchAllJudges").then(() => {
-          this.$router.push({
-            name: "judges"
-          });
+        this.$router.push({
+          name: "judges"
         });
       });
     }

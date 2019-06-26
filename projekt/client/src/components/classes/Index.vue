@@ -29,7 +29,7 @@
               }"
               >Edytuj</router-link
             >
-            <a class="btn-remove" @click="removeClass(horseClass._id)">Usuń</a>
+            <a class="btn-remove" v-if="!classHasHorses(horseClass.numer)" @click="removeClass(horseClass._id)">Usuń</a>
           </td>
         </tr>
       </tbody>
@@ -57,6 +57,9 @@ export default {
           });
         });
       });
+    },
+    classHasHorses: function (cl) {
+      return this.$store.getters.classHasHorses(cl);
     }
   }
 };

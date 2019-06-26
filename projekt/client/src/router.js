@@ -50,7 +50,7 @@ let router = new Router({
       name: "horse",
       component: () => import("./components/horses/View.vue"),
       meta: {
-        requiresAuth: true
+        requiresAuth: false
       }
     },
     //  Judges
@@ -107,15 +107,16 @@ let router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (store.state.loggedIn) {
+  setTimeout(() => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+      if (store.state.loggedIn) {
+        next();
+
+      }
+    } else {
       next();
-      return;
     }
-    alert("Nieautoryzowana akcja");
-  } else {
-    next();
-  }
+  }, 400);
 });
 
 export default router;

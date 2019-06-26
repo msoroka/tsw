@@ -25,6 +25,9 @@
               step="0.5"
               v-model="horse.wynik.noty[index].typ"
             />
+            <span class="form-error" v-if="errors[index]">
+              {{ errors[index].typ }}
+            </span>
           </td>
           <td>
             <input
@@ -34,6 +37,9 @@
               step="0.5"
               v-model="horse.wynik.noty[index].glowa"
             />
+            <span class="form-error" v-if="errors[index]">
+              {{ errors[index].glowa }}
+            </span>
           </td>
           <td>
             <input
@@ -43,6 +49,9 @@
               step="0.5"
               v-model="horse.wynik.noty[index].kloda"
             />
+            <span class="form-error" v-if="errors[index]">
+              {{ errors[index].kloda }}
+            </span>
           </td>
           <td>
             <input
@@ -52,6 +61,9 @@
               step="0.5"
               v-model="horse.wynik.noty[index].nogi"
             />
+            <span class="form-error" v-if="errors[index]">
+              {{ errors[index].nogi }}
+            </span>
           </td>
           <td>
             <input
@@ -61,31 +73,41 @@
               step="0.5"
               v-model="horse.wynik.noty[index].ruch"
             />
+            <span class="form-error" v-if="errors[index]">
+              {{ errors[index].ruch }}
+            </span>
           </td>
         </tr>
       </tbody>
     </table>
-    <div v-if="horse.wynik.rozjemca !== 0 && horse.wynik.rozjemca.length !== 0">
+    <div
+      v-if="
+        (horse.wynik.rozjemca !== 0 && horse.wynik.rozjemca.length !== 0) ||
+          tempRozj === 0 ||
+          horse.wynik.rozjemca === ''
+      "
+    >
       <h3>Ocena rozjemcy: {{ horse.wynik.rozjemca }}</h3>
-    </div>
-    <div class="form-group form-rozjemca" v-if="tempRozj === 0">
       <h3>Ocena wymaga interwencji rozjemcy</h3>
       <p>Konie z taką samą punktacją:</p>
       <ul>
-        <li v-bind:key="h._id" v-for="h in this.$store.getters.getHorsesWithIdentNotes(horse)">{{ h.nazwa }} - wynik rozjemcy {{ h.wynik.rozjemca }}</li>
+        <li
+          v-bind:key="h._id"
+          v-for="h in this.$store.getters.getHorsesWithIdentNotes(horse)"
+        >
+          {{ h.nazwa }} - wynik rozjemcy {{ h.wynik.rozjemca }}
+        </li>
       </ul>
-      <input type="text" v-model="horse.wynik.rozjemca">
+      <input type="text" v-model="horse.wynik.rozjemca" />
     </div>
     <a class="btn-add" @click="saveForm">Zapisz</a>
   </div>
 </template>
 <script>
-import axios from "axios";
-
 export default {
   data() {
     return {
-      errors: [],
+      errors: {},
       horse: {},
       judges: [],
       notesName: ["Typ", "Głowa", "Kłoda", "Nogi", "Ruch"],
@@ -110,15 +132,45 @@ export default {
     getHorse: function(id) {
       return this.$store.getters.fetchHorseById(id);
     },
-    saveForm: function() {
-      this.$store.dispatch("editHorse", this.horse).then(() => {
-        this.$socket.emit("ranking", this.horse.klasa);
-        this.$store.dispatch("fetchAllHorses").then(() => {
-          this.$router.push({
-            name: "horses"
+    saveForm: function(e) {
+      let errorsCounter = 0;
+      this.errors = {};
+      this.horse.wynik.noty.forEach((note, idx) => {
+        this.errors[idx] = {};
+        if (note.glowa < 0 || note.glowa > 20) {
+          this.errors[idx]["glowa"] = "Proszę podać wartość od 0 do 20";
+          errorsCounter++;
+        }
+        if (note.kloda < 0 || note.kloda > 20) {
+          this.errors[idx]["kloda"] = "Proszę podać wartość od 0 do 20";
+          errorsCounter++;
+        }
+        if (note.nogi < 0 || note.nogi > 20) {
+          this.errors[idx]["nogi"] = "Proszę podać wartość od 0 do 20";
+          errorsCounter++;
+        }
+        if (note.ruch < 0 || note.ruch > 20) {
+          this.errors[idx]["ruch"] = "Proszę podać wartość od 0 do 20";
+          errorsCounter++;
+        }
+        if (note.typ < 0 || note.typ > 20) {
+          this.errors[idx]["typ"] = "Proszę podać wartość od 0 do 20";
+          errorsCounter++;
+        }
+      });
+      if (errorsCounter > 0) {
+        e.preventDefault();
+        return false;
+      } else {
+        this.$store.dispatch("editHorse", this.horse).then(() => {
+          this.$socket.emit("ranking", this.horse.klasa);
+          this.$store.dispatch("fetchAllHorses").then(() => {
+            this.$router.push({
+              name: "horses"
+            });
           });
         });
-      });
+      }
     }
   }
 };
@@ -164,6 +216,12 @@ export default {
     text-align: left;
     border: 1px solid black;
     padding: 5px;
+
+    .form-error {
+      color: red;
+      font-size: 10px;
+      display: block;
+    }
   }
 }
 </style>

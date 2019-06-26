@@ -12,10 +12,6 @@ const sessionStore = new RedisStore({
     disableTTL: true
 });
 
-sessionStore.on("error", function (err) {
-    console.log("Error " + err);
-});
-
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var socketIo = require('socket.io');
@@ -27,7 +23,6 @@ var db = require('./config/database');
 var judgesRoutes = require('./api/judges/judges.route');
 var classesRoutes = require('./api/classes/classes.route');
 var horsesRoutes = require('./api/horses/horses.route');
-var authRoutes = require('./api/auth/auth.route');
 var app = express();
 var router = express.Router();
 
@@ -82,12 +77,12 @@ app.use(passport.session());
 app.post('/login',
     passport.authenticate('local'),
     (req, res) => {
-        res.status(200).send();
+        res.status(200).send(req.isAuthenticated());
     }
 );
 app.get('/logout', (req, res) => {
     req.logout();
-    res.send("Wylogowano");
+    res.status(200).send(req.isAuthenticated());
 });
 
 var Horses = require('./api/horses/horses.dao');
@@ -189,17 +184,10 @@ sio.sockets.on('connection', function (socket) {
             sio.emit('ranking', horses.sort(compare));
         });
     });
-    // console.log(socket.request.sessionID, socket.request.user);
-    // socket.emit('AUTHORIZED', socket.request.user);
+    socket.emit('AUTHORIZED', socket.request.user);
 });
 
 app.use('/', router);
-
-app.get("/user", (req, res) => {
-    console.log(req);
-    res.send(req.session.passport);
-});
-
 judgesRoutes(router);
 classesRoutes(router);
 horsesRoutes(router);

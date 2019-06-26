@@ -58,7 +58,7 @@ export default {
       this.$store
         .dispatch("login", { username, password })
         .then(() => {
-          this.$router.push("/horses");
+          this.$router.go();
           this.wrongCreds = false;
           this.username = "";
           this.password = "";

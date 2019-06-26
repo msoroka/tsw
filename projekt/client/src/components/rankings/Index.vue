@@ -8,6 +8,7 @@
             v-on:click="getClassResult(cl.numer)"
             v-bind:key="cl._id"
             v-for="cl in classes"
+            v-if="classHasHorses(cl.numer)"
           >
             {{ cl.numer }} - {{ cl.kat }}
           </li>
@@ -25,13 +26,11 @@
         </ol>
       </div>
     </div>
-    <button v-on:click="test">click</button>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import axios from "axios";
 
 export default {
   data: function() {
@@ -71,10 +70,8 @@ export default {
         }
       });
     },
-    test: function() {
-      axios.get("http://192.168.0.24:4000/user").then(function(){
-          console.log('test');
-      });
+    classHasHorses: function (cl) {
+      return this.$store.getters.classHasHorses(cl);
     }
   }
 };

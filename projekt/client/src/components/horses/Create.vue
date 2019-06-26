@@ -271,7 +271,6 @@
 
 <script>
 import countriesList from "../../assets/countries.json";
-import axios from "axios";
 
 export default {
   data() {
@@ -433,10 +432,8 @@ export default {
 
       this.$store.dispatch("addHorse", horse).then(() => {
         this.$socket.emit("ranking", horse.klasa);
-        this.$store.dispatch("fetchAllHorses").then(() => {
-          this.$router.push({
-            name: "horses"
-          });
+        this.$router.push({
+          name: "horses"
         });
       });
     }
