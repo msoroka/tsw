@@ -432,8 +432,11 @@ export default {
 
       this.$store.dispatch("addHorse", horse).then(() => {
         this.$socket.emit("ranking", horse.klasa);
-        this.$router.push({
-          name: "horses"
+        this.$socket.emit("klasa");
+        this.$store.dispatch("fetchAllHorses").then(() => {
+          this.$router.push({
+            name: "horses"
+          });
         });
       });
     }

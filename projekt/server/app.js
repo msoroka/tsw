@@ -86,6 +86,7 @@ app.get('/logout', (req, res) => {
 });
 
 var Horses = require('./api/horses/horses.dao');
+var Classes = require('./api/classes/classes.dao');
 
 var getSumPoints = (horse) => {
     var horseTyp = 0;
@@ -124,36 +125,30 @@ var getMoveSumPoints = (horse) => {
     return horseRuch;
 };
 
-var compare = (a,b) => {
-    if ( getSumPoints(a) > getSumPoints(b) ){
-        return -1;
-    }
-    else if ( getSumPoints(a) < getSumPoints(b) ){
-        return 1;
-    }
-    else {
-        if ( getTypeSumPoints(a) > getTypeSumPoints(b) ){
+var compare = (a, b) => {
+    if (a.klasa === b.klasa) {
+        if (getSumPoints(a) > getSumPoints(b)) {
             return -1;
-        }
-        else if ( getTypeSumPoints(a) < getTypeSumPoints(b) ){
+        } else if (getSumPoints(a) < getSumPoints(b)) {
             return 1;
-        }
-        else {
-            if ( getMoveSumPoints(a) > getMoveSumPoints(b) ){
+        } else {
+            if (getTypeSumPoints(a) > getTypeSumPoints(b)) {
                 return -1;
-            }
-            else if ( getMoveSumPoints(a) < getMoveSumPoints(b) ){
+            } else if (getTypeSumPoints(a) < getTypeSumPoints(b)) {
                 return 1;
-            }
-            else {
-                if ( a.wynik.rozjemca < b.wynik.rozjemca ){
+            } else {
+                if (getMoveSumPoints(a) > getMoveSumPoints(b)) {
                     return -1;
-                }
-                else if ( a.wynik.rozjemca > b.wynik.rozjemca ){
+                } else if (getMoveSumPoints(a) < getMoveSumPoints(b)) {
                     return 1;
-                }
-                else {
-                    return 0;
+                } else {
+                    if (a.wynik.rozjemca < b.wynik.rozjemca) {
+                        return -1;
+                    } else if (a.wynik.rozjemca > b.wynik.rozjemca) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
                 }
             }
         }
@@ -180,8 +175,28 @@ sio.use(passportSocketIo.authorize({
 
 sio.sockets.on('connection', function (socket) {
     socket.on('ranking', function (data) {
-        Horses.find({ klasa: data }, function (err, horses) {
+        Horses.find({}, null, {sort: {klasa: 1}}, function (err, horses) {
             sio.emit('ranking', horses.sort(compare));
+        });
+    });
+    socket.on('klasa', function (data) {
+        if (data) {
+            Classes.findOne({_id: data.klasa._id}, function (err, cl) {
+                cl.status = data.status;
+                Classes.update({_id: cl._id}, cl, function (err, cl) {
+                });
+            });
+        }
+
+        Classes.find({}, null, {sort: {numer: 1}}, function (err, classes) {
+            if (data) {
+                classes.forEach(val => {
+                    if (val._id == data.klasa._id) {
+                        val.status = data.status;
+                    }
+                })
+            }
+            sio.emit('klasa', classes);
         });
     });
     socket.emit('AUTHORIZED', socket.request.user);

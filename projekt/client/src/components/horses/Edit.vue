@@ -376,9 +376,9 @@ export default {
       localStorage.setItem("class", this.horse.klasa);
 
       this.$store.dispatch("editHorse", this.horse).then(() => {
+        this.$socket.emit("klasa");
         this.$socket.emit("ranking", this.horse.klasa);
-        this.$store.dispatch("fetchAllHorses").then((horses) => {
-          console.log(horses);
+        this.$store.dispatch("fetchAllHorses").then(() => {
           this.$router.push({
             name: "horses"
           });

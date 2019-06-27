@@ -80,13 +80,7 @@
         </tr>
       </tbody>
     </table>
-    <div
-      v-if="
-        (horse.wynik.rozjemca !== 0 && horse.wynik.rozjemca.length !== 0) ||
-          tempRozj === 0 ||
-          horse.wynik.rozjemca === ''
-      "
-    >
+    <div v-if="this.$store.getters.getHorsesWithIdentNotes(horse).length !== 0">
       <h3>Ocena rozjemcy: {{ horse.wynik.rozjemca }}</h3>
       <h3>Ocena wymaga interwencji rozjemcy</h3>
       <p>Konie z taką samą punktacją:</p>
@@ -117,6 +111,20 @@ export default {
   mounted() {
     this.horseId = this.$router.currentRoute.params.horseId;
     this.horse = this.$store.getters.fetchHorseById(this.horseId);
+    this.cl = this.$store.getters.fetchClassByNumber(this.horse.klasa);
+
+    for (let i = 0; i < this.cl.komisja.length; i++) {
+      if (!this.horse.wynik.noty[i]) {
+        this.horse.wynik.noty.push({
+          typ: 0,
+          glowa: 0,
+          kloda: 0,
+          nogi: 0,
+          ruch: 0
+        });
+      }
+    }
+
     this.getJudges();
     this.tempRozj = this.horse.wynik.rozjemca;
   },

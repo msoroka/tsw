@@ -115,11 +115,9 @@ export default {
       }
 
       if (this.originalNumber !== this.cl.numer) {
-        this.classes.forEach(val => {
-          if (val.numer === this.cl.numer) {
-            this.errors["cl.numer"] = "Numer nie może się powtarzać.";
-          }
-        });
+        if (localStorage.getItem("class") == this.originalNumber) {
+          localStorage.setItem("class", this.cl.numer);
+        }
       }
 
       if (this.errors.length === 0) {
@@ -129,9 +127,12 @@ export default {
     },
     postClass: function() {
       this.$store.dispatch("editClass", this.cl).then(() => {
-        this.$store.dispatch("fetchAllClasses").then(() => {
-          this.$router.push({
-            name: "classes"
+        this.$socket.emit("klasa");
+        this.$store.dispatch("fetchAllHorses").then(() => {
+          this.$store.dispatch("fetchAllClasses").then(() => {
+            this.$router.push({
+              name: "classes"
+            });
           });
         });
       });

@@ -101,12 +101,6 @@ export default {
         this.errors["cl.komisja"] = "Komisja wymagana";
       }
 
-      this.classes.forEach(val => {
-        if (val.numer === this.cl.numer) {
-          this.errors["cl.numer"] = "Numer nie może się powtarzać.";
-        }
-      });
-
       if (
         this.errors.length === 0 &&
         this.cl.numer &&
@@ -127,8 +121,13 @@ export default {
       };
 
       this.$store.dispatch("addClass", cl).then(() => {
-        this.$router.push({
-          name: "classes"
+        this.$socket.emit("klasa");
+        this.$store.dispatch("fetchAllHorses").then(() => {
+          this.$store.dispatch("fetchAllClasses").then(() => {
+            this.$router.push({
+              name: "classes"
+            });
+          });
         });
       });
     }

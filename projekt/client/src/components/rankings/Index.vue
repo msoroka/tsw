@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Ranking koni</h1>
+    <h1>Ranking koni - klasa {{ currentClass }}</h1>
     <div class="container">
       <div class="classes">
         <ul>
@@ -10,14 +10,21 @@
             v-for="cl in classes"
             v-if="classHasHorses(cl.numer)"
           >
-            {{ cl.numer }} - {{ cl.kat }}
+            <span>{{ cl.numer }} - {{ cl.kat }}</span>
+            <span v-if="cl.status === 'kolejka'">W kolejce</span>
+            <span v-if="cl.status === 'trwa'">Aktualnie rozgrywana</span>
+            <span v-if="cl.status === 'koniec'">Zakończona</span>
           </li>
         </ul>
       </div>
       <div class="results">
         <p v-if="horses.length === 0">Brak koni w tej klasie.</p>
         <ol>
-          <li v-bind:key="horse._id" v-for="horse in horses">
+          <li
+            v-bind:key="horse._id"
+            v-for="horse in horses"
+            v-if="horse.klasa == currentClass"
+          >
             <a @click="viewHorse(horse._id)"
               >{{ horse.nazwa }} ({{ horse.kraj }})
               {{ getHorsePoints(horse) }}pkt
@@ -36,6 +43,7 @@ export default {
   data: function() {
     return {
       horses: {},
+      classes: {},
       currentClass: 0,
       previous: 0,
       next: 0
@@ -44,18 +52,24 @@ export default {
   sockets: {
     ranking: function(data) {
       this.horses = data;
+    },
+    klasa: function(data) {
+      this.classes = data;
     }
   },
-  computed: {
-    ...mapState(["classes"])
-  },
   mounted() {
+    this.$socket.emit("klasa");
+    this.$socket.emit("ranking");
     if (localStorage.getItem("classResult")) {
-      this.$socket.emit("ranking", localStorage.getItem("classResult"));
+      this.currentClass = localStorage.getItem("classResult");
+    } else {
+      this.currentClass = this.$store.state.classes[0].numer;
+      localStorage.setItem("classResult", this.$store.state.classes[0].numer);
     }
   },
   methods: {
     getClassResult: function(num) {
+      this.currentClass = num;
       localStorage.setItem("classResult", num);
       this.$socket.emit("ranking", num);
     },
@@ -70,7 +84,7 @@ export default {
         }
       });
     },
-    classHasHorses: function (cl) {
+    classHasHorses: function(cl) {
       return this.$store.getters.classHasHorses(cl);
     }
   }
@@ -89,8 +103,9 @@ h1 {
   justify-content: space-between;
 
   .classes {
-    width: 33%;
+    width: 40vw;
     text-align: left;
+
     ul {
       list-style: none;
 
@@ -99,6 +114,8 @@ h1 {
         margin: 5px 0;
         background: #cccccc;
         font-weight: 700;
+        display: flex;
+        justify-content: space-between;
 
         &:hover {
           background: #eeeeee;
@@ -109,7 +126,7 @@ h1 {
   }
 
   .results {
-    width: 33%;
+    width: 40vw;
     ol {
       li {
         font-size: 20px;

@@ -5,16 +5,39 @@
         <div class="carousel">
           <button
             :disabled="index === 0"
-            @click="getHorsesByClass(cl.numer - 1)"
+            @click="getHorsesByClass(classes[index - 1].numer)"
           >
             <i class="arrow left"></i>
           </button>
-          <span>Klasa: {{ cl.numer }}<br />Kategoria: {{ cl.kat }}</span>
+          <span
+            >Klasa: {{ classes[index].numer }}<br />Kategoria:
+            {{ classes[index].kat }}</span
+          >
           <button
             :disabled="index === classes.length - 1"
-            @click="getHorsesByClass(cl.numer + 1)"
+            @click="getHorsesByClass(classes[index + 1].numer)"
           >
             <i class="arrow right"></i>
+          </button>
+        </div>
+        <div class="status-buttons">
+          <button
+            :disabled="cl.status == 'kolejka'"
+            v-on:click="changeStatus(cl, 'kolejka')"
+          >
+            W kolejce
+          </button>
+          <button
+            :disabled="cl.status == 'trwa'"
+            v-on:click="changeStatus(cl, 'trwa')"
+          >
+            Aktualnie rozgrywana
+          </button>
+          <button
+            :disabled="cl.status == 'koniec'"
+            v-on:click="changeStatus(cl, 'koniec')"
+          >
+            Zakończona
           </button>
         </div>
       </span>
@@ -31,7 +54,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="horse in horses" :key="horse._id" :class="{'rozjemca-background': horse.wynik.rozjemca === 0}">
+        <tr
+          v-for="horse in horses"
+          :key="horse._id"
+          :class="{ 'rozjemca-background': getRozjemca(horse) !== 0 }"
+        >
           <td class="td-action">{{ horse.numer }}</td>
           <td>{{ horse.nazwa }}</td>
           <td>{{ horse.kraj }}</td>
@@ -62,28 +89,34 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-
 export default {
   data: function() {
     return {
       horses: {},
+      classes: {},
       currentClass: 0,
       previous: 0,
       next: 0
     };
   },
+  sockets: {
+    klasa: function(data) {
+      this.classes = data;
+    }
+  },
   mounted() {
+    this.$socket.emit("klasa");
     if (localStorage.getItem("class")) {
       this.getHorsesByClass(parseInt(localStorage.getItem("class")));
       this.currentClass = parseInt(localStorage.getItem("class"));
+      if(!this.$store.getters.fetchClassByNumber(localStorage.getItem("class"))){
+        this.currentClass = this.$store.state.classes[0].numer;
+        this.getHorsesByClass(this.$store.state.classes[0].numer);
+      }
     } else {
-      this.getHorsesByClass(this.classes[0].numer);
-      this.currentClass = this.classes[0].numer;
+      this.getHorsesByClass(this.$store.state.classes[0].numer);
+      this.currentClass = this.$store.state.classes[0].numer;
     }
-  },
-  computed: {
-    ...mapState(["classes"])
   },
   methods: {
     getHorsesByClass: function(cl) {
@@ -108,6 +141,15 @@ export default {
           });
         });
       });
+    },
+    changeStatus: function(cl, status) {
+      this.$socket.emit("klasa", {
+        klasa: cl,
+        status: status
+      });
+    },
+    getRozjemca: function (horse) {
+      return this.$store.getters.getHorsesWithIdentNotes(horse).length;
     }
   }
 };
@@ -121,6 +163,25 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  .status-buttons {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+
+    button {
+      margin: 10px;
+      padding: 5px 20px;
+      font-size: inherit;
+      background: darken(lightgrey, 20%);
+      font-weight: 700;
+      color: #fff;
+
+      &:disabled {
+        background: #000;
+      }
+    }
+  }
 
   .carousel {
     display: flex;
@@ -163,11 +224,10 @@ export default {
 
   table {
     border-collapse: collapse;
-    margin-top: 20px;
     width: 100%;
 
     .rozjemca-background {
-      background: #FFCCCC;
+      background: #ffcccc;
     }
 
     th {

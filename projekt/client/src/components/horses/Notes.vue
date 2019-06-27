@@ -73,6 +73,20 @@ export default {
   mounted() {
     this.countSums();
     this.getJudges();
+
+    this.cl = this.$store.getters.fetchClassByNumber(this.horse.klasa);
+
+    for (let i = 0; i < this.cl.komisja.length; i++) {
+      if (!this.horse.wynik.noty[i]) {
+        this.horse.wynik.noty.push({
+          typ: 0,
+          glowa: 0,
+          kloda: 0,
+          nogi: 0,
+          ruch: 0
+        });
+      }
+    }
   }
 };
 </script>

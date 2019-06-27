@@ -84,25 +84,30 @@ var horsesSchema = new Schema({
     wynik: {
         required: false,
         rozjemca: {
-            type: Schema.Types.Mixed,
-            default: []
+            type: Number,
+            default: 0
         },
         noty: {
             type: [{
                 typ: {
-                    type: Number
+                    type: Number,
+                    default: 0
                 },
                 glowa: {
-                    type: Number
+                    type: Number,
+                    default: 0
                 },
                 kloda: {
-                    type: Number
+                    type: Number,
+                    default: 0
                 },
                 nogi: {
-                    type: Number
+                    type: Number,
+                    default: 0
                 },
                 ruch: {
-                    type: Number
+                    type: Number,
+                    default: 0
                 }
             }]
         }

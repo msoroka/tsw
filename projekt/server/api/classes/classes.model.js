@@ -16,6 +16,11 @@ var classesSchema = new Schema({
     komisja: {
         type: Array,
         required: true
+    },
+    status: {
+        type: String,
+        required: false,
+        default: "kolejka"
     }
 });
 

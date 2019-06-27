@@ -32,28 +32,14 @@ exports.createHorse = function (req, res, next) {
 
             return horses;
         }).then(function () {
-            Classes.findOne({numer: req.body.klasa}, function (err, cl) {
-                for (let i = 0; i < cl.komisja.length; i++) {
-                    horse.wynik.noty.push({
-                        typ: 0,
-                        glowa: 0,
-                        kloda: 0,
-                        nogi: 0,
-                        ruch: 0
-                    });
+            Horses.create(horse, function (err, horse) {
+                if (err) {
+                    res.json({
+                        error: err
+                    })
                 }
 
-                return horse;
-            }).then(function () {
-                Horses.create(horse, function (err, horse) {
-                    if (err) {
-                        res.json({
-                            error: err
-                        })
-                    }
-
-                    res.send(horse);
-                });
+                res.send(horse);
             });
         });
     }
@@ -128,15 +114,6 @@ exports.updateHorse = function (req, res, next) {
                         horse.wynik = {
                             noty: []
                         };
-                        for (let i = 0; i < cl.komisja.length; i++) {
-                            horse.wynik.noty.push({
-                                typ: 0,
-                                glowa: 0,
-                                kloda: 0,
-                                nogi: 0,
-                                ruch: 0
-                            });
-                        }
                     }
                 }).then(function () {
                     Horses.update({_id: req.params.id}, horse, function (err, horse) {
@@ -155,66 +132,6 @@ exports.updateHorse = function (req, res, next) {
                 });
 
                 return horse;
-            }).then(function () {
-                Horses.find({}, null, {sort: {numer: 1}}, function (err, horses) {
-                    let horseTyp = 0;
-                    let horseGlowa = 0;
-                    let horseKloda = 0;
-                    let horseNogi = 0;
-                    let horseRuch = 0;
-                    let horseSuma = 0;
-                    Array.from(horse.wynik.noty).forEach(hw => {
-                        horseTyp += Number(hw.typ);
-                        horseGlowa += Number(hw.glowa);
-                        horseKloda += Number(hw.kloda);
-                        horseNogi += Number(hw.nogi);
-                        horseRuch += Number(hw.ruch);
-                    });
-                    horseSuma = horseTyp + horseGlowa + horseKloda + horseNogi + horseRuch;
-
-
-                    horses.forEach(val => {
-                        if (val.klasa == horse.klasa && val._id.toString() != horse._id) {
-                            let vTyp = 0;
-                            let vGlowa = 0;
-                            let vKloda = 0;
-                            let vNogi = 0;
-                            let vRuch = 0;
-                            let vSuma = 0;
-
-                            Array.from(val.wynik.noty).forEach(v => {
-                                vTyp += Number(v.typ);
-                                vGlowa += Number(v.glowa);
-                                vKloda += Number(v.kloda);
-                                vNogi += Number(v.nogi);
-                                vRuch += Number(v.ruch);
-                            });
-                            vSuma = vTyp + vGlowa + vKloda + vNogi + vRuch;
-
-                            if (vSuma == horseSuma &&
-                                vTyp == horseTyp &&
-                                vRuch == horseRuch &&
-                                horse.wynik.rozjemca.length !== 0) {
-                                cases++;
-                            } else if (vSuma == horseSuma &&
-                                vTyp == horseTyp &&
-                                vRuch == horseRuch &&
-                                (horse.wynik.rozjemca === 0 || horse.wynik.rozjemca.length == 0)) {
-                                cases++;
-                                horse.wynik.rozjemca = 0;
-                                val.wynik.rozjemca = 0;
-
-                                Horses.update({_id: val._id}, val, function (err, horse) {
-                                });
-                            }
-                        }
-                    });
-                    if (cases === 0) {
-                        horse.wynik.rozjemca = [];
-                    }
-                    Horses.update({_id: horse._id}, horse, function (err, horse) {
-                    });
-                });
             });
         });
     }

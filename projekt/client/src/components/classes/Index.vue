@@ -51,6 +51,7 @@ export default {
     },
     removeClass: function(id) {
       this.$store.dispatch("removeClass", id).then(() => {
+        localStorage.setItem("class", this.$store.state.classes[0].numer);
         this.$store.dispatch("fetchAllClasses").then(() => {
           this.$router.push({
             name: "classes"
