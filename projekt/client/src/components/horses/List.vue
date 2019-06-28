@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="this.horses">
     <div v-for="(cl, index) in classes" :key="cl.id">
       <span v-if="cl.numer === currentClass">
         <div class="carousel">
@@ -57,7 +57,8 @@
         <tr
           v-for="horse in horses"
           :key="horse._id"
-          :class="{ 'rozjemca-background': getRozjemca(horse) !== 0 }"
+          :class="{ 'rozjemca-background': getRozjemca(horse) }"
+          v-if="horse.klasa == currentClass"
         >
           <td class="td-action">{{ horse.numer }}</td>
           <td>{{ horse.nazwa }}</td>
@@ -89,10 +90,12 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   data: function() {
     return {
-      horses: {},
+      // horses: {},
       classes: {},
       currentClass: 0,
       previous: 0,
@@ -104,9 +107,13 @@ export default {
       this.classes = data;
     }
   },
+  computed: {
+    ...mapState(["horses"])
+  },
   mounted() {
+    // console.log(this.horses);
     this.$store.dispatch("fetchAllClasses");
-    this.$store.dispatch("fetchAllHorses");
+    // this.$store.dispatch("fetchAllHorses");
     this.$socket.emit("klasa");
     if (localStorage.getItem("class")) {
       this.getHorsesByClass(parseInt(localStorage.getItem("class")));
@@ -120,7 +127,7 @@ export default {
     getHorsesByClass: function(cl) {
       localStorage.setItem("class", cl);
       this.currentClass = parseInt(cl);
-      this.horses = this.$store.getters.fetchHorsesByClass(cl);
+      // this.horses = this.$store.getters.fetchHorsesByClass(cl);
     },
     viewHorse: function(horseId) {
       this.$router.push({
@@ -132,12 +139,13 @@ export default {
     },
     removeHorse: function(id) {
       this.$store.dispatch("removeHorse", id).then(() => {
-        this.$store.dispatch("fetchAllHorses").then(() => {
-          this.getHorsesByClass(parseInt(localStorage.getItem("class")));
-          this.$router.push({
-            name: "horses"
-          });
+        // this.$store.dispatch("fetchAllHorses").then(() => {
+        this.$socket.emit("ranking");
+        this.getHorsesByClass(parseInt(localStorage.getItem("class")));
+        this.$router.push({
+          name: "horses"
         });
+        // });
       });
     },
     changeStatus: function(cl, status) {
@@ -147,7 +155,10 @@ export default {
       });
     },
     getRozjemca: function(horse) {
-      return this.$store.getters.getHorsesWithIdentNotes(horse).length;
+      return (
+        !!this.$store.getters.getHorsesWithIdentNotes(horse).length &&
+        horse.wynik.rozjemca == 0
+      );
     }
   }
 };

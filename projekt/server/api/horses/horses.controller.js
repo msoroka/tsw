@@ -114,9 +114,7 @@ exports.updateHorse = function (req, res, next) {
                             })
                         }
 
-                        res.json({
-                            message: "Horse updated successfully"
-                        })
+                        res.json(horse);
                     });
 
                     return horse;
@@ -137,9 +135,7 @@ exports.removeHorse = function (req, res, next) {
                 })
             }
 
-            res.json({
-                message: "Horse deleted successfully"
-            })
+            res.json(horse);
         })
     }
 };

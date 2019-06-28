@@ -18,6 +18,16 @@ let ADD_HORSE = (state, horse) => {
   state.horses.push(horse);
 };
 
+let UPDATE_HORSE = (state, horse) => {
+  const item = state.horses.find(item => item._id === horse._id);
+  Object.assign(item, horse);
+};
+
+let REMOVE_HORSE = (state, horse) => {
+  let index = state.horses.findIndex(item => item._id === horse._id);
+  state.horses.splice(index, 1);
+};
+
 let FETCH_JUDGES = (state, judges) => {
   state.judges = judges;
 };
@@ -40,6 +50,8 @@ export default {
   ADD_CLASS,
   FETCH_HORSES,
   ADD_HORSE,
+  UPDATE_HORSE,
+  REMOVE_HORSE,
   FETCH_JUDGES,
   ADD_JUDGE,
   MESSAGE,

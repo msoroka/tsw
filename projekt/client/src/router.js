@@ -123,7 +123,7 @@ router.beforeEach((to, from, next) => {
     } else {
       next();
     }
-  }, 300);
+  }, 500);
 });
 
 export default router;

@@ -376,12 +376,12 @@ export default {
 
       this.$store.dispatch("editHorse", this.horse).then(() => {
         this.$socket.emit("klasa");
-        this.$socket.emit("ranking", this.horse.klasa);
-        this.$store.dispatch("fetchAllHorses").then(() => {
+        this.$socket.emit("ranking");
+        // this.$store.dispatch("fetchAllHorses").then(() => {
           this.$router.push({
             name: "horses"
           });
-        });
+        // });
       });
     }
   }

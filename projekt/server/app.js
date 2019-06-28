@@ -224,13 +224,11 @@ app.use('/import/classes', function (req, res) {
                 judgesArr.push(val._id);
             });
         }).then(function () {
-            Classes.distinct('numer', null, function (err, classes) {
-                response.data.forEach(val => {
-                    if (!classes.includes(val.numer)) {
-                        val.komisja = judgesArr;
-                        Classes.create(val, function (err, cl) {
-                        });
-                    }
+            response.data.forEach(val => {
+                val.komisja = judgesArr;
+                console.log(val);
+                Classes.create(val, function (err, cl) {
+                    console.log(err);
                 });
             });
         });
@@ -240,7 +238,12 @@ app.use('/import/classes', function (req, res) {
 });
 app.use('/import/horses', function (req, res) {
     axios.get('http://localhost:3000/konie').then(function (response) {
-        console.log(response.data);
+        response.data.forEach(val => {
+            val.wynik.noty = [];
+            val.wynik.rozjemca = 0;
+            Horses.create(val, function (err, judge) {
+            });
+        });
     }).then(function () {
         res.status(200).send();
     });

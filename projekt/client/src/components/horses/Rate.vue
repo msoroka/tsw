@@ -24,6 +24,7 @@
               max="20"
               step="0.5"
               v-model="horse.wynik.noty[index].typ"
+              :tabindex="1*horse.wynik.noty.length + index"
             />
             <span class="form-error" v-if="errors[index]">
               {{ errors[index].typ }}
@@ -36,6 +37,7 @@
               max="20"
               step="0.5"
               v-model="horse.wynik.noty[index].glowa"
+              :tabindex="2*horse.wynik.noty.length + index"
             />
             <span class="form-error" v-if="errors[index]">
               {{ errors[index].glowa }}
@@ -48,6 +50,7 @@
               max="20"
               step="0.5"
               v-model="horse.wynik.noty[index].kloda"
+              :tabindex="3*horse.wynik.noty.length + index"
             />
             <span class="form-error" v-if="errors[index]">
               {{ errors[index].kloda }}
@@ -60,6 +63,7 @@
               max="20"
               step="0.5"
               v-model="horse.wynik.noty[index].nogi"
+              :tabindex="4*horse.wynik.noty.length + index"
             />
             <span class="form-error" v-if="errors[index]">
               {{ errors[index].nogi }}
@@ -72,6 +76,7 @@
               max="20"
               step="0.5"
               v-model="horse.wynik.noty[index].ruch"
+              :tabindex="5*horse.wynik.noty.length + index"
             />
             <span class="form-error" v-if="errors[index]">
               {{ errors[index].ruch }}
@@ -173,12 +178,12 @@ export default {
         return false;
       } else {
         this.$store.dispatch("editHorse", this.horse).then(() => {
-          this.$socket.emit("ranking", this.horse.klasa);
-          this.$store.dispatch("fetchAllHorses").then(() => {
+          this.$socket.emit("ranking");
+          // this.$store.dispatch("fetchAllHorses").then(() => {
             this.$router.push({
               name: "horses"
             });
-          });
+          // });
         });
       }
     }

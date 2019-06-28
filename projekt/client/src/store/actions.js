@@ -80,7 +80,9 @@ let addHorse = ({ commit }, horse) => {
 let editHorse = ({ commit }, horse) => {
   return transport
     .put(URL + "/konie/" + horse._id, horse)
-    .then(function() {
+    .then(function(response) {
+      console.log(response.data);
+      commit("UPDATE_HORSE", response.data);
       commit("MESSAGE", "Pomyślnie zaktualizowano konia.");
       commit("MESSAGE_DISPLAY", true);
     })
@@ -93,7 +95,8 @@ let editHorse = ({ commit }, horse) => {
 let removeHorse = ({ commit }, id) => {
   return transport
     .delete(URL + "/konie/" + id)
-    .then(function() {
+    .then(function(response) {
+      commit("REMOVE_HORSE", response.data);
       commit("MESSAGE", "Pomyślnie usunięto konia.");
       commit("MESSAGE_DISPLAY", true);
     })

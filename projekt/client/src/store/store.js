@@ -10,7 +10,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     classes: {},
-    horses: {},
+    horses: [],
     judges: {},
     loggedIn: false,
     message: "",

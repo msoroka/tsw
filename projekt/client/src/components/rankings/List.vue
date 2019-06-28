@@ -8,7 +8,10 @@
             v-on:click="getClassResult(cl.numer)"
             v-bind:key="cl._id"
             v-for="cl in classes"
-            v-if="$store.getters.fetchHorsesByClass(cl.numer).length"
+            v-if="
+              $store.getters.fetchHorsesByClass(cl.numer).length &&
+                cl.status !== 'kolejka'
+            "
           >
             <span>{{ cl.numer }} - {{ cl.kat }}</span>
             <span v-if="cl.status === 'kolejka'">W kolejce</span>
@@ -23,14 +26,22 @@
           <li
             v-bind:key="horse._id"
             v-for="horse in horses"
-            v-if="horse.klasa == currentClass"
+            v-if="horse.klasa == currentClass && !!horse.wynik.noty.length"
           >
+            <span>{{ horseRankingNumber[horse._id] }}. </span>
             <a @click="viewHorse(horse._id)"
               >{{ horse.nazwa }} ({{ horse.kraj }})
               {{ getHorsePoints(horse) }}pkt
-<!--              <span v-if="$store.getters.getHorsesWithIdentNotes(horse).length">-->
-<!--                + rozjemca {{ horse.wynik.rozjemca }}-->
-<!--              </span>-->
+            </a>
+          </li>
+
+          <li
+            v-bind:key="horse._id"
+            v-for="horse in horses"
+            v-if="horse.klasa == currentClass && !!!horse.wynik.noty.length && classes.find(item => item.status ==='koniec' && item.numer == horse.klasa)"
+          >
+            <a @click="viewHorse(horse._id)"
+              >{{ horse.nazwa }} ({{ horse.kraj }}) - brak udziału
             </a>
           </li>
         </ol>
@@ -47,11 +58,35 @@ export default {
       classes: {},
       currentClass: 0,
       previous: 0,
-      next: 0
+      next: 0,
+      horseRankingNumber: []
     };
   },
   sockets: {
     ranking: function(data) {
+      let currentClass = 0;
+      let position = 1;
+      let changed = false;
+      data.forEach(val => {
+        if (currentClass != val.klasa) {
+          currentClass = val.klasa;
+          position = 1;
+        } else {
+          if (
+            val.wynik.rozjemca == 0 &&
+            !!this.$store.getters.getHorsesWithIdentNotes(val).length
+          ) {
+            if (!changed) {
+              position++;
+            }
+            changed = !changed;
+          } else {
+            changed = false;
+            position++;
+          }
+        }
+        this.horseRankingNumber[val._id] = position;
+      });
       this.horses = data;
     },
     klasa: function(data) {
@@ -69,6 +104,11 @@ export default {
     }
   },
   methods: {
+    assignRankingNumber: function(horse) {
+      let klasa = horse.klasa;
+
+      console.log(this.horses);
+    },
     getClassResult: function(num) {
       this.currentClass = num;
       localStorage.setItem("classResult", num);
@@ -129,6 +169,7 @@ h1 {
   .results {
     width: 40vw;
     ol {
+      list-style-type: none;
       li {
         font-size: 25px;
         &:hover {

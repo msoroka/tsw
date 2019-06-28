@@ -431,13 +431,13 @@ export default {
       localStorage.setItem("class", this.horse.klasa);
 
       this.$store.dispatch("addHorse", horse).then(() => {
-        this.$socket.emit("ranking", horse.klasa);
-        this.$store.dispatch("fetchAllHorses").then(() => {
-          this.$socket.emit("klasa");
+        this.$socket.emit("ranking");
+        // this.$store.dispatch("fetchAllHorses").then(() => {
+          this.$socket.emit("klasa", horse.klasa);
           this.$router.push({
             name: "horses"
           });
-        });
+        // });
       });
     }
   }
