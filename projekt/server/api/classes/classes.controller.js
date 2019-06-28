@@ -71,29 +71,30 @@ let updateRestClass = (req, newCl) => {
     Classes.findOne({_id: req.params.id}, function (err, cl) {
         console.log('cl', cl);
         return Classes.find({}, null, {sort: {numer: 1}}, function (err, classes) {
-            if (cl.numer != newCl.numer) {
                 Classes.distinct('numer', null, function (err, classesNumber) {
-                    return classes.forEach(val => {
-                        console.log(parseInt(val.numer) >= parseInt(newCl.numer), classesNumber.includes(parseInt(newCl.numer)));
-                        if (parseInt(val.numer) >= parseInt(newCl.numer) && classesNumber.includes(parseInt(newCl.numer))
-                            && !val._id.equals(cl._id)) {
-                            console.log('val', val);
-                            val.numer = parseInt(val.numer + 1);
-                            console.log('val2', val);
-                            Classes.update({_id: val._id}, val, function (err, cl) {
-                                 Horses.find({klasa: val.numer - 1}, function (err, horses) {
-                                    console.log('horses', horses);
-                                    horses.forEach(horse => {
-                                        horse.klasa = val.numer;
-                                        Horses.update({_id: horse._id}, horse, function (err, horse) {
+                    if (cl.numer != newCl.numer) {
+                        return classes.forEach(val => {
+                            console.log(parseInt(val.numer) >= parseInt(newCl.numer), classesNumber.includes(parseInt(newCl.numer)));
+                            if (parseInt(val.numer) >= parseInt(newCl.numer) && classesNumber.includes(parseInt(newCl.numer))
+                                && !val._id.equals(cl._id)) {
+                                console.log('val', val);
+                                val.numer = parseInt(val.numer + 1);
+                                console.log('val2', val);
+                                Classes.update({_id: val._id}, val, function (err, cl) {
+                                    Horses.find({klasa: val.numer - 1}, function (err, horses) {
+                                        console.log('horses', horses);
+                                        horses.forEach(horse => {
+                                            horse.klasa = val.numer;
+                                            Horses.update({_id: horse._id}, horse, function (err, horse) {
+                                            });
+                                            console.log('horse_up', horse);
                                         });
-                                        console.log('horse_up', horse);
-                                    });
 
+                                    });
                                 });
-                            });
-                        }
-                    });
+                            }
+                        });
+                    }
                 }).then(function () {
                     return Horses.find({klasa: cl.numer}, function (err, horses) {
                         if (cl.numer != newCl.numer) {
@@ -110,7 +111,6 @@ let updateRestClass = (req, newCl) => {
                     return Classes.update({_id: req.params.id}, newCl, function (err, cl) {
                         });
                 });;
-            }
         });
     }).then(() => {
         // console.log(newCl);

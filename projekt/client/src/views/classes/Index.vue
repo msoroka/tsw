@@ -12,6 +12,9 @@ export default {
   components: {
     ClassesIndex
   },
+  // mounted() {
+  //   this.$store.dispatch("fetchAllClasses");
+  // },
   computed: {
     ...mapState(["classes"])
   }

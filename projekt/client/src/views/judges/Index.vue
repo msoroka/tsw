@@ -12,6 +12,9 @@ export default {
   components: {
     JudgesIndex
   },
+  // mounted() {
+  //   this.$store.dispatch("fetchAllJudges");
+  // },
   computed: {
     ...mapState(["judges"])
   }

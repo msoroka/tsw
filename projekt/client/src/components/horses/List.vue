@@ -105,6 +105,8 @@ export default {
     }
   },
   mounted() {
+    this.$store.dispatch("fetchAllClasses");
+    this.$store.dispatch("fetchAllHorses");
     this.$socket.emit("klasa");
     if (localStorage.getItem("class")) {
       this.getHorsesByClass(parseInt(localStorage.getItem("class")));
@@ -144,7 +146,7 @@ export default {
         status: status
       });
     },
-    getRozjemca: function (horse) {
+    getRozjemca: function(horse) {
       return this.$store.getters.getHorsesWithIdentNotes(horse).length;
     }
   }

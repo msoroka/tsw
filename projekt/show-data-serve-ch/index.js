@@ -7,7 +7,6 @@ module.exports = () => {
   const masciM = ["siwy","gniady","kaszt.","sk.gn.","kary"];
   const masciZ = ["siwa","gniada","kaszt.","sk.gn.","kara"];
   const aktualnyRok = new Date().getFullYear();
-  const czempRocznych = faker.random.boolean();
   const kategorie = [
     ["roczne", {min: 1, max: 1}],
     ["dwuletnie", {min:2, max: 2}],
@@ -31,46 +30,6 @@ module.exports = () => {
       }
       liczbaKlas += lk2;
     }
-    let klasyCzempionatowe = new Map([]);
-    if (czempRocznych) {
-      liczbaKlas += 1;
-      klasy.push({kl: liczbaKlas, kat: "roczne – czempionat", pl: "klacze"});
-      klasyCzempionatowe.set("klacze roczne", liczbaKlas);
-      liczbaKlas += 1;
-      klasy.push({kl: liczbaKlas, kat: "roczne – czempionat", pl: "ogiery"});
-      klasyCzempionatowe.set("ogiery roczne", liczbaKlas);
-    }
-    liczbaKlas += 1;
-    klasy.push({kl: liczbaKlas, kat: "młodsze – czempionat", pl: "klacze"});
-    klasyCzempionatowe.set("klacze młodsze", liczbaKlas);
-    liczbaKlas += 1;
-    klasy.push({kl: liczbaKlas, kat: "młodsze – czempionat", pl: "ogiery"});
-    klasyCzempionatowe.set("ogiery młodsze", liczbaKlas);
-    liczbaKlas += 1;
-    klasy.push({kl: liczbaKlas, kat: "starsze – czempionat", pl: "klacze"});
-    klasyCzempionatowe.set("klacze starsze", liczbaKlas);
-    liczbaKlas += 1;
-    klasy.push({kl: liczbaKlas, kat: "starsze – czempionat", pl: "ogiery"});
-    klasyCzempionatowe.set("ogiery starsze", liczbaKlas);
-      klasy.forEach((kl, idx) => {
-        if (kl.pl === "klacze") {
-            if (kl.kat === "starsze") {
-                klasy[idx].czempionat = klasyCzempionatowe.get("klacze starsze");
-            } else if (kl.kat === "roczne") {
-                klasy[idx].czempionat = klasyCzempionatowe.get(czempRocznych ? "klacze roczne" : "klacze młodsze");
-            } else if (kl.kat === "młodsze") {
-                klasy[idx].czempionat = klasyCzempionatowe.get("klacze młodsze");
-            }
-        } else {
-            if (kl.kat === "starsze") {
-                klasy[idx].czempionat = klasyCzempionatowe.get("ogiery starsze");
-            } else if (kl.kat === "roczne") {
-                klasy[idx].czempionat = klasyCzempionatowe.get(czempRocznych ? "ogiery roczne" : "ogiery młodsze");
-            } else if (kl.kat === "młodsze") {
-                klasy[idx].czempionat = klasyCzempionatowe.get("ogiery młodsze");
-            }
-        }
-      });
     return klasy;
   })();
 
@@ -79,8 +38,7 @@ module.exports = () => {
       total: 0,
       breaks: []
     };
-    let tot = klasy.length - (czempRocznych ? 3 : 2);
-    for (let cno = 1; cno <= tot; cno += 1) {
+    for (let cno = 1; cno <= klasy.length; cno += 1) {
       let n = faker.random.number({min: 7, max: 17});
       info.total += n;
       info.breaks.push(info.total)
@@ -105,22 +63,14 @@ module.exports = () => {
   return {
     sedziowie: sedziowie,
     klasy: _.times(klasy.length, (nr) => {
-      let kl = {
+      return {
         id: nr + 1,
 	numer: nr + 1,
         kat: `${klasy[nr].pl} ${klasy[nr].kat}`,
-      };
-      if (klasy[nr].czempionat) {
-        kl.czempionat = klasy[nr].czempionat;
-        kl.komisja = _.times(liczebnoscKomisji, (s) => {
+        komisja: _.times(liczebnoscKomisji, (s) => {
           return (s + nr) % (liczebnoscKomisji + 1) + 1;
         })
-      } else {
-        kl.komisja = _.times(sedziowie.length, (s) => {
-          return s + 1;
-        })
       }
-      return kl;
     }),
     konie: _.times(liczebnoscKlas.total, (n) => {
       let klasa = numerKlasy(n + 1);

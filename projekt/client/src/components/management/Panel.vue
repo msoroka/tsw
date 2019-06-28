@@ -15,16 +15,16 @@ export default {
         this.$store.dispatch("fetchAllJudges");
       });
     },
-    // importHorses: function() {
-    //   this.$store.dispatch("importHorses").then(() => {
-    //     this.$store.dispatch("fetchAllHorses");
-    //   });
-    // },
-    // importClasses: function() {
-    //   this.$store.dispatch("importClasses").then(() => {
-    //     this.$store.dispatch("fetchAllClasses");
-    //   });
-    // }
+    importHorses: function() {
+      this.$store.dispatch("importHorses").then(() => {
+        this.$store.dispatch("fetchAllHorses");
+      });
+    },
+    importClasses: function() {
+      this.$store.dispatch("importClasses").then(() => {
+        this.$store.dispatch("fetchAllClasses");
+      });
+    }
   }
 };
 </script>

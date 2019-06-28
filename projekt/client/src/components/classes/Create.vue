@@ -121,9 +121,9 @@ export default {
       };
 
       this.$store.dispatch("addClass", cl).then(() => {
-        this.$socket.emit("klasa");
         this.$store.dispatch("fetchAllHorses").then(() => {
           this.$store.dispatch("fetchAllClasses").then(() => {
+            this.$socket.emit("klasa");
             this.$router.push({
               name: "classes"
             });

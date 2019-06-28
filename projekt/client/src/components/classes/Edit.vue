@@ -127,8 +127,8 @@ export default {
     },
     postClass: function() {
       this.$store.dispatch("editClass", this.cl).then(() => {
-        this.$socket.emit("klasa");
         this.$store.dispatch("fetchAllClasses").then(() => {
+          this.$socket.emit("klasa");
           this.$store.dispatch("fetchAllHorses").then(() => {
             this.$router.push({
               name: "classes"

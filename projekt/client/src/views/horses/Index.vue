@@ -11,6 +11,9 @@ export default {
   components: {
     HorsesIndex
   },
+  // mounted() {
+  //   this.$store.dispatch("fetchAllHorses");
+  // },
   computed: {
     ...mapState(["horses"])
   }

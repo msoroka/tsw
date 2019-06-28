@@ -50,6 +50,10 @@ export default {
   props: {
     classes: {}
   },
+  mounted() {
+    this.$store.dispatch("fetchAllJudges");
+    this.$store.dispatch("fetchAllClasses");
+  },
   methods: {
     getJudge: function(id) {
       return this.$store.getters.fetchJudgeById(id);

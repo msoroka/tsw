@@ -39,6 +39,9 @@ export default {
   props: {
     judges: {}
   },
+  mounted() {
+    this.$store.dispatch("fetchAllJudges");
+  },
   methods: {
     removeJudge: function(id) {
       this.$store.dispatch("removeJudge", id).then(() => {
