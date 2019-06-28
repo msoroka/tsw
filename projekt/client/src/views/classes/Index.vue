@@ -7,13 +7,10 @@
 
 <script>
 import { mapState } from "vuex";
-import ClassesIndex from "@/components/classes/Index.vue";
+import ClassesIndex from "@/components/classes/List.vue";
 export default {
   components: {
     ClassesIndex
-  },
-  mounted() {
-    // this.$store.dispatch("fetchAllClasses");
   },
   computed: {
     ...mapState(["classes"])

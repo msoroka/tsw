@@ -8,7 +8,7 @@
             v-on:click="getClassResult(cl.numer)"
             v-bind:key="cl._id"
             v-for="cl in classes"
-            v-if="classHasHorses(cl.numer)"
+            v-if="$store.getters.fetchHorsesByClass(cl.numer).length"
           >
             <span>{{ cl.numer }} - {{ cl.kat }}</span>
             <span v-if="cl.status === 'kolejka'">W kolejce</span>
@@ -28,6 +28,9 @@
             <a @click="viewHorse(horse._id)"
               >{{ horse.nazwa }} ({{ horse.kraj }})
               {{ getHorsePoints(horse) }}pkt
+<!--              <span v-if="$store.getters.getHorsesWithIdentNotes(horse).length">-->
+<!--                + rozjemca {{ horse.wynik.rozjemca }}-->
+<!--              </span>-->
             </a>
           </li>
         </ol>
@@ -37,8 +40,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-
 export default {
   data: function() {
     return {
@@ -129,9 +130,22 @@ h1 {
     width: 40vw;
     ol {
       li {
-        font-size: 20px;
+        font-size: 25px;
         &:hover {
           cursor: pointer;
+        }
+
+        &:nth-child(1) {
+          font-weight: 700;
+          font-size: 30px;
+        }
+        &:nth-child(2) {
+          font-weight: 700;
+          font-size: 27px;
+        }
+        &:nth-child(3) {
+          font-weight: 700;
+          font-size: 25px;
         }
       }
     }

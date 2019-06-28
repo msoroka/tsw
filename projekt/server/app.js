@@ -87,6 +87,7 @@ app.get('/logout', (req, res) => {
 
 var Horses = require('./api/horses/horses.dao');
 var Classes = require('./api/classes/classes.dao');
+var Judges = require('./api/judges/judges.dao');
 
 var getSumPoints = (horse) => {
     var horseTyp = 0;
@@ -202,11 +203,54 @@ sio.sockets.on('connection', function (socket) {
     socket.emit('AUTHORIZED', socket.request.user);
 });
 
+var axios = require('axios');
+
+app.use('/import/judges', function (req, res) {
+    axios.get('http://localhost:3000/sedziowie').then(function (response) {
+        response.data.forEach(val => {
+            Judges.create(val, function (err, judge) {
+            });
+        });
+    }).then(function () {
+        res.status(200).send();
+    });
+});
+
+app.use('/import/classes', function (req, res) {
+    axios.get('http://localhost:3000/klasy').then(function (response) {
+        var judgesArr = [];
+        Judges.find({}, null, {limit: 4}, function (err, judges) {
+            judges.forEach(val => {
+                judgesArr.push(val._id);
+            });
+        }).then(function () {
+            Classes.distinct('numer', null, function (err, classes) {
+                response.data.forEach(val => {
+                    if (!classes.includes(val.numer)) {
+                        val.komisja = judgesArr;
+                        Classes.create(val, function (err, cl) {
+                        });
+                    }
+                });
+            });
+        });
+    }).then(function () {
+        res.status(200).send();
+    });
+});
+app.use('/import/horses', function (req, res) {
+    axios.get('http://localhost:3000/konie').then(function (response) {
+        console.log(response.data);
+    }).then(function () {
+        res.status(200).send();
+    });
+});
+
 app.use('/', router);
 judgesRoutes(router);
 classesRoutes(router);
 horsesRoutes(router);
 
 server.listen(properties.PORT, () => {
-    console.log(`Serwer ${properties.PORT}`);
+    console.log(`Serwer działa na porcie ${properties.PORT}`);
 });

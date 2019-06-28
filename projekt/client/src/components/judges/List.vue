@@ -18,7 +18,12 @@
               :to="{ name: 'judges.edit', params: { judgeId: judge._id } }"
               >Edytuj</router-link
             >
-            <a v-if="!judgeHasClass(judge._id)" class="btn-remove" @click="removeJudge(judge._id)">Usuń</a>
+            <a
+              v-if="!judgeHasClass(judge._id)"
+              class="btn-remove"
+              @click="removeJudge(judge._id)"
+              >Usuń</a
+            >
           </td>
         </tr>
       </tbody>
@@ -44,7 +49,7 @@ export default {
         });
       });
     },
-    judgeHasClass: function (id) {
+    judgeHasClass: function(id) {
       return this.$store.getters.judgeHasClass(id);
     }
   }

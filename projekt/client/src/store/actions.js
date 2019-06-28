@@ -16,18 +16,42 @@ let fetchAllClasses = ({ commit }) => {
 };
 
 let addClass = ({ commit }, cl) => {
-  return transport.post(URL + "/klasy", cl).then((response) => {
-    commit("ADD_CLASS", response.data);
-    return response.data;
-  });
+  return transport
+    .post(URL + "/klasy", cl)
+    .then(function() {
+      commit("MESSAGE", "Pomyślnie dodano klasę.");
+      commit("MESSAGE_DISPLAY", true);
+    })
+    .catch(function() {
+      commit("MESSAGE", "Błąd podczas dodawania klasy.");
+      commit("MESSAGE_DISPLAY", true);
+    });
 };
 
 let editClass = ({ commit }, cl) => {
-  return transport.put(URL + "/klasy/" + cl._id, cl);
+  return transport
+    .put(URL + "/klasy/" + cl._id, cl)
+    .then(function() {
+      commit("MESSAGE", "Pomyślnie zaktualizowano klasę.");
+      commit("MESSAGE_DISPLAY", true);
+    })
+    .catch(function() {
+      commit("MESSAGE", "Błąd podczas edycji klasy.");
+      commit("MESSAGE_DISPLAY", true);
+    });
 };
 
 let removeClass = ({ commit }, id) => {
-  return transport.delete(URL + "/klasy/" + id);
+  return transport
+    .delete(URL + "/klasy/" + id)
+    .then(function() {
+      commit("MESSAGE", "Pomyślnie usunięto klasę.");
+      commit("MESSAGE_DISPLAY", true);
+    })
+    .catch(function() {
+      commit("MESSAGE", "Błąd podczas usuwania klasy.");
+      commit("MESSAGE_DISPLAY", true);
+    });
 };
 
 let fetchAllHorses = ({ commit }) => {
@@ -41,18 +65,42 @@ let fetchAllHorses = ({ commit }) => {
 };
 
 let addHorse = ({ commit }, horse) => {
-  return transport.post(URL + "/konie", horse).then((response) => {
-    commit("ADD_HORSE", response.data);
-    return response.data;
-  });
+  return transport
+    .post(URL + "/konie", horse)
+    .then(function() {
+      commit("MESSAGE", "Pomyślnie dodano konia.");
+      commit("MESSAGE_DISPLAY", true);
+    })
+    .catch(function() {
+      commit("MESSAGE", "Błąd podczas dodawania konia.");
+      commit("MESSAGE_DISPLAY", true);
+    });
 };
 
 let editHorse = ({ commit }, horse) => {
-  return transport.put(URL + "/konie/" + horse._id, horse);
+  return transport
+    .put(URL + "/konie/" + horse._id, horse)
+    .then(function() {
+      commit("MESSAGE", "Pomyślnie zaktualizowano konia.");
+      commit("MESSAGE_DISPLAY", true);
+    })
+    .catch(function() {
+      commit("MESSAGE", "Błąd podczas edycji konia.");
+      commit("MESSAGE_DISPLAY", true);
+    });
 };
 
 let removeHorse = ({ commit }, id) => {
-  return transport.delete(URL + "/konie/" + id);
+  return transport
+    .delete(URL + "/konie/" + id)
+    .then(function() {
+      commit("MESSAGE", "Pomyślnie usunięto konia.");
+      commit("MESSAGE_DISPLAY", true);
+    })
+    .catch(function() {
+      commit("MESSAGE", "Błąd podczas usuwania konia.");
+      commit("MESSAGE_DISPLAY", true);
+    });
 };
 
 let fetchAllJudges = ({ commit }) => {
@@ -65,30 +113,107 @@ let fetchAllJudges = ({ commit }) => {
 };
 
 let addJudge = ({ commit }, judge) => {
-  return transport.post(URL + "/sedziowie", judge).then((response) => {
-    commit("ADD_JUDGE", response.data);
-    return response.data;
-  });
+  return transport
+    .post(URL + "/sedziowie", judge)
+    .then(function() {
+      commit("MESSAGE", "Pomyślnie dodano sędziego.");
+      commit("MESSAGE_DISPLAY", true);
+    })
+    .catch(function() {
+      commit("MESSAGE", "Błąd podczas dodawania sędziego.");
+      commit("MESSAGE_DISPLAY", true);
+    });
 };
 
 let editJudge = ({ commit }, judge) => {
-  return transport.put(URL + "/sedziowie/" + judge._id, judge);
+  return transport
+    .put(URL + "/sedziowie/" + judge._id, judge)
+    .then(function() {
+      commit("MESSAGE", "Pomyślnie zaktualizowano sędziego.");
+      commit("MESSAGE_DISPLAY", true);
+    })
+    .catch(function() {
+      commit("MESSAGE", "Błąd podczas edycji sędziego.");
+      commit("MESSAGE_DISPLAY", true);
+    });
 };
 
 let removeJudge = ({ commit }, id) => {
-  return transport.delete(URL + "/sedziowie/" + id);
+  return transport
+    .delete(URL + "/sedziowie/" + id)
+    .then(function() {
+      commit("MESSAGE", "Pomyślnie usunięto sędziego.");
+      commit("MESSAGE_DISPLAY", true);
+    })
+    .catch(function() {
+      commit("MESSAGE", "Błąd podczas usuwania sędziego.");
+      commit("MESSAGE_DISPLAY", true);
+    });
 };
 
 let login = ({ commit }, user) => {
-  return transport.post(URL + "/login", user).then(function(response) {
-    commit("SOCKET_AUTHORIZED", response.data);
-  });
+  return transport
+    .post(URL + "/login", user)
+    .then(function(response) {
+      commit("SOCKET_AUTHORIZED", response.data);
+    })
+    .catch(function() {
+      commit("MESSAGE", "Błąd podczas logowania.");
+      commit("MESSAGE_DISPLAY", true);
+    });
 };
 
 let logout = ({ commit }) => {
-  return transport.get(URL + "/logout").then(function(response) {
-    commit("SOCKET_AUTHORIZED", response.data);
-  });
+  return transport
+    .get(URL + "/logout")
+    .then(function(response) {
+      commit("SOCKET_AUTHORIZED", response.data);
+      commit("MESSAGE", "Pomyślnie wylogowano.");
+      commit("MESSAGE_DISPLAY", true);
+    })
+    .catch(function() {
+      commit("MESSAGE", "Błąd podczas wylogowywania.");
+      commit("MESSAGE_DISPLAY", true);
+    });
+};
+
+let importJudges = ({ commit }) => {
+  return transport
+    .get(URL + "/import/judges")
+    .then(function() {
+      commit("MESSAGE", "Pomyślnie zaimportowano sędziów.");
+      commit("MESSAGE_DISPLAY", true);
+    })
+    .catch(function() {
+      commit("MESSAGE", "Błąd podczas importu sędziów.");
+      commit("MESSAGE_DISPLAY", true);
+    });
+};
+
+let importClasses = ({ commit }) => {
+  return transport
+    .get(URL + "/import/classes")
+    .then(function() {
+      commit("MESSAGE", "Pomyślnie zaimportowano klasy.");
+      commit("MESSAGE_DISPLAY", true);
+    })
+    .catch(function() {
+      commit("MESSAGE", "Błąd podczas importu klas.");
+      commit("MESSAGE_DISPLAY", true);
+    });
+};
+
+let importHorses = ({ commit }) => {
+  return transport
+    .get(URL + "/import/horses")
+    .then(function() {
+      commit("MESSAGE", "Pomyślnie zaimportowano konie.");
+      commit("MESSAGE_DISPLAY", true);
+    })
+    .catch(function() {
+      commit("MESSAGE", "Błąd podczas importu koni.");
+      commit("MESSAGE_DISPLAY", true);
+    });
 };
 
 export default {
@@ -105,5 +230,8 @@ export default {
   editJudge,
   removeJudge,
   login,
-  logout
+  logout,
+  importJudges,
+  importClasses,
+  importHorses
 };

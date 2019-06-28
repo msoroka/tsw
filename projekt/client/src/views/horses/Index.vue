@@ -6,13 +6,10 @@
 
 <script>
 import { mapState } from "vuex";
-import HorsesIndex from "@/components/horses/Index.vue";
+import HorsesIndex from "@/components/horses/List.vue";
 export default {
   components: {
     HorsesIndex
-  },
-  mounted() {
-    // this.$store.dispatch("fetchAllHorses");
   },
   computed: {
     ...mapState(["horses"])

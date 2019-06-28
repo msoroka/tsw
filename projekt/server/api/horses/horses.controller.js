@@ -89,20 +89,11 @@ exports.updateHorse = function (req, res, next) {
         Horses.findOne({_id: req.params.id}, function (err, h) {
             Horses.find({}, null, {sort: {numer: 1}}, function (err, horses) {
                 if (h.numer !== req.body.numer) {
-                    let isChanged = false;
                     horses.forEach(val => {
-                        if (val._id.toString() !== req.params.id) {
-                            if (isChanged) {
-                                val.numer = val.numer + 1;
-                                Horses.update({_id: val._id}, val, function (err, val) {
-                                });
-                            }
-                            if (val.numer == req.body.numer) {
-                                val.numer = val.numer + 1;
-                                isChanged = true;
-                                Horses.update({_id: val._id}, val, function (err, val) {
-                                });
-                            }
+                        if(val.numer == req.body.numer) {
+                            val.numer = h.numer;
+                            Horses.update({_id: val._id}, val, function (err, val) {
+                            });
                         }
                     });
                 }

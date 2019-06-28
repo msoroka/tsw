@@ -16,6 +16,7 @@
     "vue-multiselect": "^2.1.6",
     "vue-router": "^3.0.3",
     "vue-socket.io": "^3.0.7",
+    "vuejs-dialog": "^1.4.0",
     "vuex": "^3.0.1",
     "vuex-persist": "^2.0.1"
   },

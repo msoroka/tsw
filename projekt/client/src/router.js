@@ -102,6 +102,14 @@ let router = new Router({
       meta: {
         requiresAuth: true
       }
+    },
+    {
+      path: "/management",
+      name: "management",
+      component: () => import("./views/management/Index.vue"),
+      meta: {
+        requiresAuth: true
+      }
     }
   ]
 });
@@ -111,12 +119,11 @@ router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
       if (store.state.loggedIn) {
         next();
-
       }
     } else {
       next();
     }
-  }, 400);
+  }, 300);
 });
 
 export default router;

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import HorsesRanking from "@/components/rankings/Index.vue";
+import HorsesRanking from "@/components/rankings/List.vue";
 
 export default {
   components: {

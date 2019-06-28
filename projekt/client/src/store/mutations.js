@@ -26,6 +26,14 @@ let ADD_JUDGE = (state, judge) => {
   state.judges.push(judge);
 };
 
+let MESSAGE = (state, message) => {
+  state.message = message;
+};
+
+let MESSAGE_DISPLAY = (state, message) => {
+  state.displayMessage = message;
+};
+
 export default {
   SOCKET_AUTHORIZED,
   FETCH_CLASSES,
@@ -33,5 +41,7 @@ export default {
   FETCH_HORSES,
   ADD_HORSE,
   FETCH_JUDGES,
-  ADD_JUDGE
+  ADD_JUDGE,
+  MESSAGE,
+  MESSAGE_DISPLAY
 };

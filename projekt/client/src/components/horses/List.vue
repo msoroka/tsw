@@ -109,10 +109,6 @@ export default {
     if (localStorage.getItem("class")) {
       this.getHorsesByClass(parseInt(localStorage.getItem("class")));
       this.currentClass = parseInt(localStorage.getItem("class"));
-      if(!this.$store.getters.fetchClassByNumber(localStorage.getItem("class"))){
-        this.currentClass = this.$store.state.classes[0].numer;
-        this.getHorsesByClass(this.$store.state.classes[0].numer);
-      }
     } else {
       this.getHorsesByClass(this.$store.state.classes[0].numer);
       this.currentClass = this.$store.state.classes[0].numer;

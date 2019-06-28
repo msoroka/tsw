@@ -7,13 +7,10 @@
 
 <script>
 import { mapState } from "vuex";
-import JudgesIndex from "@/components/judges/Index.vue";
+import JudgesIndex from "@/components/judges/List.vue";
 export default {
   components: {
     JudgesIndex
-  },
-  mounted() {
-    // this.$store.dispatch("fetchAllJudges");
   },
   computed: {
     ...mapState(["judges"])

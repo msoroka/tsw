@@ -12,7 +12,9 @@ export default new Vuex.Store({
     classes: {},
     horses: {},
     judges: {},
-    loggedIn: false
+    loggedIn: false,
+    message: "",
+    displayMessage: false
   },
   actions,
   mutations,

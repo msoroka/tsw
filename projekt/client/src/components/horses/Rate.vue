@@ -125,6 +125,8 @@ export default {
       }
     }
 
+    console.log(this.horse);
+
     this.getJudges();
     this.tempRozj = this.horse.wynik.rozjemca;
   },

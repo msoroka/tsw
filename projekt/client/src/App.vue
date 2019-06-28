@@ -12,8 +12,8 @@ export default {
     Navbar
   },
   mounted() {
-    this.$store.dispatch("fetchAllHorses");
     this.$store.dispatch("fetchAllClasses");
+    this.$store.dispatch("fetchAllHorses");
     this.$store.dispatch("fetchAllJudges");
   }
 };

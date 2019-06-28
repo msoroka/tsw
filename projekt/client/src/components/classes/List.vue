@@ -16,7 +16,7 @@
           <td>{{ horseClass.kat }}</td>
           <td>{{ horseClass.czempionat }}</td>
           <td>
-            <span v-for="sedzia in horseClass.komisja">
+            <span v-for="sedzia in horseClass.komisja" :key="sedzia">
               {{ getJudge(sedzia).sedzia }} ({{ getJudge(sedzia).kraj }})<br />
             </span>
           </td>
@@ -29,7 +29,12 @@
               }"
               >Edytuj</router-link
             >
-            <a class="btn-remove" v-if="!classHasHorses(horseClass.numer)" @click="removeClass(horseClass._id)">Usuń</a>
+            <a
+              class="btn-remove"
+              v-if="!classHasHorses(horseClass.numer)"
+              @click="removeClass(horseClass._id)"
+              >Usuń</a
+            >
           </td>
         </tr>
       </tbody>
@@ -59,7 +64,7 @@ export default {
         });
       });
     },
-    classHasHorses: function (cl) {
+    classHasHorses: function(cl) {
       return this.$store.getters.classHasHorses(cl);
     }
   }

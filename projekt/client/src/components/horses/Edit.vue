@@ -275,7 +275,6 @@
 
 <script>
 import countriesList from "../../assets/countries.json";
-import axios from "axios";
 
 export default {
   data() {
